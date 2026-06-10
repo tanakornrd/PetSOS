@@ -229,7 +229,6 @@ if user_role == "B2C App (Pet Parents)":
         st.markdown("<p class='section-title' style='color:#FF3B30;'>ระบบนำทางกรณีวิกฤตสูงสุด (Code Red)</p>", unsafe_allow_html=True)
         st.markdown("<p style='color:#1D1D1F; font-size:14px;'>อัลกอริทึมประเมินพบสภาวะเสี่ยงต่อชีวิต ระบบตัดหน้าจอข้ามขั้นตอน AI ทั้งหมดโดยอัตโนมัติ เพื่อเข้าสู่โหมดนำทางสถานพยาบาลที่ใกล้ที่สุดในทันที</p>", unsafe_allow_html=True)
         
-        # Map simulation
         map_data = pd.DataFrame({'lat': [13.7367, 13.7456], 'lon': [100.5331, 100.5210]})
         st.map(map_data)
         
@@ -309,7 +308,7 @@ elif user_role == "B2B Portal (Veterinary)":
     col_c1, col_c2 = st.columns(2)
     with col_c1:
         st.metric(label="จำนวนดาวน์โหลดผ่าน QR ประจำคลินิก", value="142 ราย")
-    with col_v2:
+    with col_c2: # --- FIXED BUG: เปลี่ยนจาก col_v2 เป็น col_c2 เรียบร้อยครับ ---
         st.metric(label="ค่าคอมมิชชันสะสมเดือนปัจจุบัน", value="4,260 THB")
     st.markdown("</div>", unsafe_allow_html=True)
 
