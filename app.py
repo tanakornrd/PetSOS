@@ -1,107 +1,70 @@
 import streamlit as st
 import pandas as pd
 
-# --- 1. System Configuration & Apple Web Aesthetic ---
+# --- 1. System Configuration & Clean Apple Institutional Design ---
 st.set_page_config(page_title="PetSOS Platform", page_icon="🐾", layout="centered")
 
+# Global Minimalist CSS Styling
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
         
-        /* Global Apple Typography & Color Grid */
+        /* Global Apple Typography Standard */
         html, body, .stApp, .stMarkdown, p, label, select, input {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Prompt", sans-serif !important;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Prompt", sans-serif !important;
             color: #1D1D1F !important;
         }
         
-        .main { background-color: #F5F5F7 !important; }
-        #MainMenu, footer, header { visibility: hidden; }
-
-        /* Apple Product Page Typography */
-        .apple-title {
-            font-size: 40px !important;
+        /* Clean Canvas Background */
+        .stApp { background-color: #F5F5F7 !important; }
+        
+        /* Hide Infrastructure UI Noise */
+        header, footer, #MainMenu { visibility: hidden !important; }
+        
+        /* Title Alignment */
+        .apple-main-title {
+            font-size: 34px !important;
             font-weight: 700 !important;
-            letter-spacing: -1px !important;
+            letter-spacing: -0.8px !important;
             text-align: center;
-            color: #1D1D1F !important;
-            margin-top: 10px;
+            margin-top: 15px;
+            margin-bottom: 2px;
         }
-        
-        .apple-subtitle {
-            font-size: 18px !important;
+        .apple-main-subtitle {
+            font-size: 16px !important;
             font-weight: 400 !important;
             color: #86868B !important;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
-        .feature-tag {
+        /* Micro-Labels for Features */
+        .feature-context {
             font-size: 11px !important;
             font-weight: 600 !important;
             color: #86868B !important;
             letter-spacing: 0.5px !important;
             text-transform: uppercase;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
-
-        .section-title {
-            font-size: 22px !important;
+        .block-heading {
+            font-size: 19px !important;
             font-weight: 600 !important;
-            letter-spacing: -0.5px !important;
-            color: #1D1D1F !important;
-            margin-bottom: 12px;
+            letter-spacing: -0.3px !important;
+            margin-top: 0px;
+            margin-bottom: 10px;
         }
 
-        /* Segmented Control (Top Nav Tabs) */
-        div[data-testid="stRadio"] {
-            background: #E8E8ED !important;
-            padding: 4px !important;
-            border-radius: 12px !important;
-            margin-bottom: 25px !important;
-        }
-        div[data-testid="stRadio"] > label { display: none !important; }
-        div[data-testid="stRadio"] > div {
-            flex-direction: row !important;
-            justify-content: space-around !important;
-        }
-        div[data-testid="stRadio"] label p {
-            font-weight: 500 !important;
-            font-size: 13px !important;
-            color: #1D1D1F !important;
-        }
-
-        /* Apple Premium Card Structure */
-        .apple-card {
-            background: #FFFFFF !important;
-            border-radius: 18px !important;
-            border: 1px solid #E8E8ED !important;
-            padding: 24px !important;
-            margin-bottom: 20px !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01) !important;
-        }
-
-        /* Specialized Red Line Card for Code Red */
-        .code-red-card {
-            background: #FFFFFF !important;
-            border-radius: 18px !important;
-            border-left: 4px solid #FF3B30 !important;
-            border-top: 1px solid #E8E8ED !important;
-            border-right: 1px solid #E8E8ED !important;
-            border-bottom: 1px solid #E8E8ED !important;
-            padding: 24px !important;
-            margin-bottom: 20px !important;
-        }
-
-        /* Native Look Forms & Inputs */
+        /* Native Look Input Elements */
         div[data-baseweb="select"] > div, div[data-baseweb="input"] > div {
-            border-radius: 10px !important;
+            border-radius: 12px !important;
             border: 1px solid #D2D2D7 !important;
             background-color: #FFFFFF !important;
         }
 
-        /* Button Refactoring */
+        /* Apple UI Button Matrix */
         .stButton > button {
-            border-radius: 10px !important;
+            border-radius: 12px !important;
             font-weight: 500 !important;
             font-size: 14px !important;
             padding: 10px 20px !important;
@@ -113,236 +76,216 @@ st.markdown("""
         }
         .stButton > button:hover { background-color: #F5F5F7 !important; }
         
+        /* Primary Action Accent */
         button[kind="primary"] {
             background-color: #007AFF !important;
             color: #FFFFFF !important;
             border: none !important;
         }
         button[kind="primary"]:hover { background-color: #0062CC !important; }
-
-        /* SOS Custom Pill Button */
-        .sos-btn button {
-            background-color: #FF3B30 !important;
-            color: #FFFFFF !important;
-            border: none !important;
-            font-size: 15px !important;
-            font-weight: 600 !important;
-            border-radius: 10px !important;
-        }
-        .sos-btn button:hover { background-color: #D7261E !important; }
         
-        /* Metric Adjustments */
+        /* Metric Typography */
         div[data-testid="stMetricValue"] {
-            font-size: 28px !important;
+            font-size: 26px !important;
             font-weight: 600 !important;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 2. Initialize Workflow State ---
-if 'b2c_journey_state' not in st.session_state: 
-    st.session_state.b2c_journey_state = 'Overview'
+# --- 2. Identity Branding ---
+st.markdown("<h1 class='apple-main-title'>PetSOS</h1>", unsafe_allow_html=True)
+st.markdown("<p class='apple-main-subtitle'>Ecosystem Demonstration Workspace</p>", unsafe_allow_html=True)
 
-# --- 3. Platform Identity ---
-st.markdown("<h1 class='apple-title'>PetSOS</h1>", unsafe_allow_html=True)
-st.markdown("<p class='apple-subtitle'>Medical Decision Support & Ecosystem Platform</p>", unsafe_allow_html=True)
-
-# --- 4. Investor Top Navigation Control Panel ---
-st.markdown("<p style='font-weight:700; color:#86868B; font-size:10px; letter-spacing:1px; text-align:center; margin-bottom:6px;'>INVESTOR INTERFACE SELECTOR</p>", unsafe_allow_html=True)
-user_role = st.radio(
-    "Interface Selector",
-    ["B2C App (Pet Parents)", "B2B Portal (Veterinary)", "Backend Infrastructure"],
-    horizontal=True
+# --- 3. Robust Role Navigator (Dropdown Mechanism for Mobile) ---
+current_workspace = st.selectbox(
+    "เลือกหน้าต่างระบบนำเสนอ (Workspace View):",
+    [
+        "📱 ฝั่งเจ้าของสัตว์เลี้ยง (B2C Mobile App)", 
+        "🩺 ฝั่งสัตวแพทย์พันธมิตร (B2B Portal)", 
+        "🌐 โครงสร้างการเชื่อมต่อข้อมูลหลังบ้าน (Backend Infrastructure)"
+    ]
 )
-st.write("<br>", unsafe_allow_html=True)
+st.write("---")
 
 
 # ==========================================
 # 1. ฝั่งผู้ใช้งานทั่วไป (B2C App)
 # ==========================================
-if user_role == "B2C App (Pet Parents)":
+if current_workspace == "📱 ฝั่งเจ้าของสัตว์เลี้ยง (B2C Mobile App)":
     
-    # Investor Journey Simulation Bar
-    st.markdown("<div style='background:#E8E8ED; padding:10px; border-radius:12px; margin-bottom:20px; text-align:center;'>", unsafe_allow_html=True)
-    st.markdown("<span style='font-size:12px; font-weight:600; color:#666;'>ตัวเลือกจำลองสถานะแอปเพื่อตรวจงานเฟส B2C:</span>", unsafe_allow_html=True)
-    col_s1, col_s2, col_s3 = st.columns(3)
-    with col_s1:
-        if st.button("หน้าแรก & ตรวจอาการ", type="secondary" if st.session_state.b2c_journey_state != 'Overview' else "primary"):
-            st.session_state.b2c_journey_state = 'Overview'
-            st.rerun()
-    with col_s2:
-        if st.button("เคสฉุกเฉิน (Code Red)", type="secondary" if st.session_state.b2c_journey_state != 'CodeRed' else "primary"):
-            st.session_state.b2c_journey_state = 'CodeRed'
-            st.rerun()
-    with col_s3:
-        if st.button("ผลวิเคราะห์ & Telemed", type="secondary" if st.session_state.b2c_journey_state != 'TriageOutput' else "primary"):
-            st.session_state.b2c_journey_state = 'TriageOutput'
-            st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+    # Step Selector inside B2C to show sequential user journey cleanly
+    b2c_step = st.selectbox(
+        "ขั้นตอนในสัญญะการใช้งาน (User Journey Step):",
+        [
+            "ขั้นตอนที่ 1: หน้าแรก และการคัดกรองอาการเบื้องต้น",
+            "ขั้นตอนที่ 2: หน้าจอวิกฤตความรับผิดชอบเป็นศูนย์ (Code Red)",
+            "ขั้นตอนที่ 3: หน้าแสดงผลลัพธ์ และระบบการแพทย์ทางไกลพร้อมชำระเงิน"
+        ]
+    )
+    st.write("<br>", unsafe_allow_html=True)
 
-    # --- STATE: OVERVIEW (Features 1, 2, 5) ---
-    if st.session_state.b2c_journey_state == 'Overview':
+    # --- STEP 1: HOME & TRIAGE INTAKE (Features 1, 2, 5) ---
+    if b2c_step == "ขั้นตอนที่ 1: หน้าแรก และการคัดกรองอาการเบื้องต้น":
         
         # Feature 1: One-Tap SOS
-        st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
-        st.markdown("<p class='feature-tag'>Feature 1 • One-Tap SOS</p>", unsafe_allow_html=True)
-        st.markdown("<p class='section-title'>ขอความช่วยเหลือฉุกเฉิน</p>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#666; font-size:14px; margin-bottom:15px;'>ระบบตัดวงจรเข้าสู่โหมดกู้ชีพทันทีเมื่อผู้ใช้งานอยู่ในสภาวะตื่นตระหนก</p>", unsafe_allow_html=True)
-        st.markdown("<div class='sos-btn'>", unsafe_allow_html=True)
-        if st.button("SOS Emergency Assistance", use_container_width=True):
-            st.session_state.b2c_journey_state = 'CodeRed'
-            st.rerun()
-        st.markdown("</div></div>", unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown("<p class='feature-context'>Feature 1 • One-Tap SOS</p>", unsafe_allow_html=True)
+            st.markdown("<h3 class='block-heading'>ปุ่มขอความช่วยเหลือฉุกเฉิน</h3>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#666; font-size:14px; margin-bottom:15px;'>ระบบตัดวงจรการซักประวัติเพื่อนำทางไปยังโรงพยาบาลที่ใกล้ที่สุดทันทีเมื่อผู้ใช้เกิดความตื่นตระหนกสูงสุด</p>", unsafe_allow_html=True)
+            if st.button("🚨 SOS Emergency Assistance", use_container_width=True):
+                st.warning("ระบบจำลองตรวจพบการกดเหตุฉุกเฉิน กรุณาปรับแถบเลือกขั้นตอนด้านบนเป็น 'ขั้นตอนที่ 2' เพื่อตรวจงานหน้าจอส่งโรงพยาบาลด่วนครับ")
+        
+        st.write("<br>", unsafe_allow_html=True)
         
         # Feature 2: AI Triage Engine
-        st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
-        st.markdown("<p class='feature-tag'>Feature 2 • AI Triage Engine</p>", unsafe_allow_html=True)
-        st.markdown("<p class='section-title'>ระบบคัดกรองอาการดิจิทัล</p>", unsafe_allow_html=True)
-        
-        species = st.selectbox("ชนิดสัตว์เลี้ยง", ["สุนัข", "แมว", "สัตว์แปลก (Exotic)"])
-        user_input = st.text_input("ระบุอาการพื้นฐานอย่างกระชับ", placeholder="เช่น ซึม อาเจียน หรือ ไม่กินอาหารมาราว 2 วัน")
-        st.file_uploader("แนบหลักฐานรูปภาพหรือคลิปวิดีโอประกอบ (ถ้ามี)", type=['png','jpg','mp4'])
-        
+        with st.container(border=True):
+            st.markdown("<p class='feature-context'>Feature 2 • AI Triage Engine</p>", unsafe_allow_html=True)
+            st.markdown("<h3 class='block-heading'>ระบบวิเคราะห์อาการดิจิทัล</h3>", unsafe_allow_html=True)
+            
+            species = st.selectbox("ชนิดของสัตว์เลี้ยง", ["สุนัข", "แมว", "สัตว์แปลก (Exotic)"])
+            user_input = st.text_input("อธิบายอาการผิดปกติขั้นต้น:", placeholder="เช่น สุนัขมีอาการซึม ไม่กินอาหาร หรืออาเจียน")
+            st.file_uploader("แนบรูปภาพหรือวิดีโออาการประกอบการวินิจฉษย (ถ้ามี)", type=['png','jpg','mp4'])
+            
+            if st.button("ส่งข้อมูลเพื่อประเมินผล ➡️", type="primary", use_container_width=True):
+                st.success("บันทึกข้อมูลเข้าสู่การประเมินแล้ว กรุณาปรับแถบเลือกขั้นตอนด้านบนเป็น 'ขั้นตอนที่ 3' เพื่อตรวจสอบการจำลองผลลัพธ์ระดับสีเหลืองครับ")
+
         st.write("<br>", unsafe_allow_html=True)
-        if st.button("ส่งข้อมูลประเมินผล", type="primary", use_container_width=True):
-            st.session_state.b2c_journey_state = 'TriageOutput'
-            st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-        
+
         # Feature 5: AI Health Timeline & Reminders
-        st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
-        st.markdown("<p class='feature-tag'>Feature 5 • AI Health Timeline & Reminders</p>", unsafe_allow_html=True)
-        st.markdown("<p class='section-title'>บันทึกสุขภาพและการแจ้งเตือน</p>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px;'>กลไกหลักในการขับเคลื่อนยอดผู้สมัครสมาชิกระดับพรีเมียม (Premium Subscription Retention)</p>", unsafe_allow_html=True)
-        
-        mock_timeline = pd.DataFrame({
-            'โปรแกรมการดูแล': ['วัคซีนรวมประจำปี', 'หยดยาป้องกันเห็บหมัด', 'ตรวจประเมินค่าไตขั้นสูง'],
-            'การแจ้งเตือนระบบ': ['เกินกำหนดเวลา', 'ถึงกำหนดสัปดาห์นี้', 'วางแผนในอีก 3 เดือน']
-        })
-        st.table(mock_timeline)
-        st.markdown("</div>", unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown("<p class='feature-context'>Feature 5 • AI Health Timeline & Reminders</p>", unsafe_allow_html=True)
+            st.markdown("<h3 class='block-heading'>แดชบอร์ดประวัติสุขภาพและการแจ้งเตือน</h3>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#86868B; font-size:13px; margin-bottom:12px;'>กลไกสำคัญในการรักษาฐานลูกค้าเพื่อผลักดันยอดสมัครสมาชิกระดับพรีเมียม (Premium Subscription Retention)</p>", unsafe_allow_html=True)
+            
+            mock_timeline = pd.DataFrame({
+                'โปรแกรมการดูแลรักษา': ['การฉีดวัคซีนรวมประจำปี', 'การหยดยาป้องกันเห็บหมัดประจำเดือน', 'การตรวจคัดกรองโรคไตขั้นสูง'],
+                'สถานะการแจ้งเตือน': ['🔴 เกินกำหนดเวลาบริการ', '🔔 ถึงกำหนดในสัปดาห์นี้', '📅 มีแผนการในอีก 3 เดือน']
+            })
+            st.table(mock_timeline)
 
-    # --- STATE: CODE RED (Feature 3) ---
-    elif st.session_state.b2c_journey_state == 'CodeRed':
-        st.markdown("<div class='code-red-card'>", unsafe_allow_html=True)
-        st.markdown("<p class='feature-tag' style='color:#FF3B30;'>Feature 3 • Zero-Liability Emergency Routing</p>", unsafe_allow_html=True)
-        st.markdown("<p class='section-title' style='color:#FF3B30;'>ระบบนำทางกรณีวิกฤตสูงสุด (Code Red)</p>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#1D1D1F; font-size:14px;'>อัลกอริทึมประเมินพบสภาวะเสี่ยงต่อชีวิต ระบบตัดหน้าจอข้ามขั้นตอน AI ทั้งหมดโดยอัตโนมัติ เพื่อเข้าสู่โหมดนำทางสถานพยาบาลที่ใกล้ที่สุดในทันที</p>", unsafe_allow_html=True)
+    # --- STEP 2: CODE RED ROUTING (Feature 3) ---
+    elif b2c_step == "ขั้นตอนที่ 2: หน้าจอวิกฤตความรับผิดชอบเป็นศูนย์ (Code Red)":
+        with st.container(border=True):
+            st.markdown("<p class='feature-context' style='color:#FF3B30;'>Feature 3 • Zero-Liability Emergency Routing</p>", unsafe_allow_html=True)
+            st.markdown("<h3 class='block-heading' style='color:#FF3B30;'>ระบบจัดการกรณีวิกฤตสูงสุด (Code Red)</h3>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#1D1D1F; font-size:14px; margin-bottom:15px;'>อัลกอริทึมประเมินพบสภาวะเสี่ยงต่อสัญญาณชีพ ระบบข้ามขั้นตอน AI ทั้งหมดโดยอัตโนมัติ เพื่อนำทางไปยังสถานพยาบาลสัตว์ 24 ชั่วโมงที่ใกล้ที่สุดเพื่อลดภาระความรับผิดชอบทางกฎหมายของแพลตฟอร์ม</p>", unsafe_allow_html=True)
+            
+            # Map simulation
+            map_data = pd.DataFrame({'lat': [13.7367, 13.7456], 'lon': [100.5331, 100.5210]})
+            st.map(map_data)
+            
+            st.write("<br>", unsafe_allow_html=True)
+            st.button("📞 ติดต่อสายด่วนโรงพยาบาลสัตว์วิกฤตทันที", type="primary", use_container_width=True)
+
+    # --- STEP 3: OUTPUT, TELEMED & PAYMENT (Features 4, 6) ---
+    elif b2c_step == "ขั้นตอนที่ 3: หน้าแสดงผลลัพธ์ และระบบการแพทย์ทางไกลพร้อมชำระเงิน":
         
-        map_data = pd.DataFrame({'lat': [13.7367, 13.7456], 'lon': [100.5331, 100.5210]})
-        st.map(map_data)
-        
+        with st.container(border=True):
+            st.markdown("<p class='feature-context'>Triage Evaluation Output</p>", unsafe_allow_html=True)
+            st.markdown("<h3 class='block-heading'>ผลการประเมิน: ระดับสีเหลือง (Observe)</h3>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#424245; font-size:14px;'>อาการสัตว์เลี้ยงพ้นขีดอันตรายฉุกเฉินเฉียบพลัน แนะนำให้สังเกตพฤติกรรมอย่างใกล้ชิด หรือนัดหมายแพทย์ผ่านระบบการแพทย์ทางไกลเพื่อคลายความกังวล</p>", unsafe_allow_html=True)
+
         st.write("<br>", unsafe_allow_html=True)
-        st.button("โทรสายด่วนสถานพยาบาล 24 ชั่วโมง", type="primary", use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
 
-    # --- STATE: TRIAGE OUTPUT (Features 4, 6) ---
-    elif st.session_state.b2c_journey_state == 'TriageOutput':
-        
-        st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
-        st.markdown("<p class='feature-tag'>Triage Result Output</p>", unsafe_allow_html=True)
-        st.markdown("<p class='section-title'>ผลการประเมิน: ระดับสีเหลือง (Observe)</p>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#424245; font-size:14px;'>อาการพ้นขีดอันตรายฉุกเฉินเฉียบพลัน แนะนำให้สังเกตอาการอย่างใกล้ชิด หรือทำการนัดหมายแพทย์ผ่านระบบการแพทย์ทางไกล</p>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-        
         # Feature 4: Telemedicine Gateway
-        st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
-        st.markdown("<p class='feature-tag'>Feature 4 • Telemedicine Gateway</p>", unsafe_allow_html=True)
-        st.markdown("<p class='section-title'>ระบบการแพทย์ทางไกล</p>", unsafe_allow_html=True)
-        st.markdown("<div style='background:#F5F5F7; padding:12px; border-radius:8px; margin-bottom:15px; text-align:center; font-size:14px; font-weight:500; color:#FF9500;'>ระยะเวลารอสายโดยประมาณ: 12:45 นาที</div>", unsafe_allow_html=True)
-        st.button("เข้าสู่ห้องสนทนาทางการแพทย์ (Video Call)", type="primary", use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-        
+        with st.container(border=True):
+            st.markdown("<p class='feature-context'>Feature 4 • Telemedicine Gateway</p>", unsafe_allow_html=True)
+            st.markdown("<h3 class='block-heading'>ระบบการแพทย์ทางไกลสัตวแพทย์ออนไลน์</h3>", unsafe_allow_html=True)
+            st.markdown("<div style='background:#FFF9E6; padding:10px; border-radius:8px; text-align:center; font-size:13px; font-weight:500; color:#B45309; margin-bottom:15px;'>⏳ ระยะเวลารอสายสัตวแพทย์สแตนด์บาย: 12:45 นาที</div>", unsafe_allow_html=True)
+            st.button("🎥 เข้าสู่ห้องสนทนาและเปิดระบบ Video Call กับแพทย์", type="primary", use_container_width=True)
+
+        st.write("<br>", unsafe_allow_html=True)
+
         # Feature 6: Payment & Subscription Manager
-        st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
-        st.markdown("<p class='feature-tag'>Feature 6 • Payment & Subscription Manager</p>", unsafe_allow_html=True)
-        st.markdown("<p class='section-title'>โครงสร้างการสร้างรายได้ (Monetization Model)</p>", unsafe_allow_html=True)
-        
-        col_m1, col_m2 = st.columns(2)
-        with col_m1:
-            st.markdown("<p style='font-size:14px; font-weight:600; margin-bottom:2px;'>Transactional Pay</p><span style='font-size:12px; color:#86868B;'>ปรึกษารายครั้ง</span>", unsafe_allow_html=True)
-            st.button("ชำระเงิน 350 THB", use_container_width=True)
-        with col_m2:
-            st.markdown("<p style='font-size:14px; font-weight:600; margin-bottom:2px;'>Premium Subscription</p><span style='font-size:12px; color:#86868B;'>รายเดือนสมาชิก</span>", unsafe_allow_html=True)
-            st.button("สมัครสมาชิก 299 THB", type="primary", use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown("<p class='feature-context'>Feature 6 • Payment & Subscription Manager</p>", unsafe_allow_html=True)
+            st.markdown("<h3 class='block-heading'>กลไกการแปลงเป็นรายได้ (Monetization Model)</h3>", unsafe_allow_html=True)
+            
+            col_m1, col_m2 = st.columns(2)
+            with col_m1:
+                st.markdown("<p style='font-size:14px; font-weight:600; margin-bottom:2px;'>Pay-Per-Use</p><span style='font-size:12px; color:#86868B;'>ยอดชำระค่ารักษาคำนวณรายครั้ง</span>", unsafe_allow_html=True)
+                st.button("ชำระค่าบริการ 350 บาท", use_container_width=True)
+            with col_m2:
+                st.markdown("<p style='font-size:14px; font-weight:600; margin-bottom:2px;'>Premium Membership</p><span style='font-size:12px; color:#86868B;'>ยอดสมัครระบบรายเดือนพรีเมียม</span>", unsafe_allow_html=True)
+                st.button("สมัครสมาชิก 299.-/ด.", type="primary", use_container_width=True)
 
 
 # ==========================================
 # 2. ฝั่งสัตวแพทย์ (B2B Portal)
 # ==========================================
-elif user_role == "B2B Portal (Veterinary)":
+elif current_workspace == "🩺 ฝั่งสัตวแพทย์พันธมิตร (B2B Portal)":
     
     # Feature 1: Vet Dashboard
-    st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
-    st.markdown("<p class='feature-tag'>Feature 1 • Vet Dashboard & AI Executive Summary</p>", unsafe_allow_html=True)
-    st.markdown("<p class='section-title'>พื้นที่ทำงานการวินิจฉัยพาร์ตเนอร์คลินิก</p>", unsafe_allow_html=True)
-    st.markdown("<p style='font-size:13px; color:#86868B; margin-bottom:12px;'>เคสรอตรวจ: สุนัข สายพันธุ์โกลเด้น รีทรีฟเวอร์ (อายุ 5 ปี)</p>", unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div style='background:#F5F5F7; padding:16px; border-radius:12px; margin-bottom:15px; font-size:14px; line-height:1.5;'>
-        <b>AI Executive Summary (ประวัติย่อยโดย AI):</b><br>
-        • สัตว์เลี้ยงอาเจียนเป็นฟองสีขาว 3 ครั้งในรอบ 6 ชั่วโมงที่ผ่านมา<br>
-        • พฤติกรรมซึมลงอย่างมีนัยสำคัญ และปฏิเสธการทานน้ำลายล่าสุด<br>
-        • ข้อเสนอแนะเบื้องต้น: มีความเสี่ยงภาวะ Gastritis ควรรีเช็กสิ่งแปลกปลอมในกระเพาะอาหาร
-    </div>
-    """, unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-    
+    with st.container(border=True):
+        st.markdown("<p class='feature-context'>Feature 1 • Vet Dashboard & AI Executive Summary</p>", unsafe_allow_html=True)
+        st.markdown("<h3 class='block-heading'>พื้นที่ปฏิบัติงานซักประวัติสัตวแพทย์</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='font-size:13px; color:#86868B; margin-bottom:12px;'>ผู้ป่วยรอการตรวจ: สุนัข สายพันธุ์โกลเด้น รีทรีฟเวอร์ (อายุ 5 ปี)</p>", unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div style='background:#F5F5F7; padding:16px; border-radius:12px; margin-bottom:5px; font-size:14px; line-height:1.5; color:#1D1D1F;'>
+            <b>บทสรุปประวัติโดยย่อยจาก AI (AI Executive Summary):</b><br>
+            • สัตว์เลี้ยงมีอาการอาเจียนเป็นฟองสีขาว 3 ครั้งในรอบระยะเวลา 6 ชั่วโมงที่ผ่านมา<br>
+            • ดัชนีกิจกรรมลดลงอย่างมีนัยสำคัญราว 40% และปฏิเสธการดื่มน้ำลายล่าสุด<br>
+            • ข้อเสนอแนะทางการแพทย์เบื้องต้น: มีความเสี่ยงต่อภาวะ Gastritis ควรรีเช็กสิ่งแปลกปลอมอุดตันในทางเดินอาหาร
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.write("<br>", unsafe_allow_html=True)
+
     # Feature 2: Verified Data Labeling
-    st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
-    st.markdown("<p class='feature-tag'>Feature 2 • Verified Data Labeling</p>", unsafe_allow_html=True)
-    st.markdown("<p class='section-title'>การรับรองชุดข้อมูลเกรดทางการแพทย์</p>", unsafe_allow_html=True)
-    st.markdown("<p style='font-size:13px; color:#86868B; margin-bottom:12px;'>ระบบล็อกผลตรวจเพื่อนำไปใช้คำนวณเบี้ยประกันร่วมกับพาร์ตเนอร์ธุรกิจ (B2B Medical Data Asset)</p>", unsafe_allow_html=True)
-    
-    vet_choice = st.selectbox("ผลการวินิจฉัยสิ้นสุดโดยสัตวแพทย์", ["Gastritis (โรคกระเพาะอาหารอักเสบ)", "Foreign Body Obstruction (สิ่งแปลกปลอมอุดตัน)", "Parvovirus (ลำไส้อักเสบติดต่อ)"])
-    if st.button("อนุมัติและลงนามรับรองข้อมูล (Verify Sign-Off)", type="primary", use_container_width=True):
-        st.success("ลงทะเบียนรหัสโรคเข้าสู่ฐานข้อมูลความปลอดภัยสูงเรียบร้อย")
-    st.markdown("</div>", unsafe_allow_html=True)
+    with st.container(border=True):
+        st.markdown("<p class='feature-context'>Feature 2 • Verified Data Labeling</p>", unsafe_allow_html=True)
+        st.markdown("<h3 class='block-heading'>การลงนามรับรองชุดข้อมูลทางการแพทย์</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='font-size:13px; color:#86868B; margin-bottom:12px;'>ระบบล็อกผลวินิจฉัยเพื่อแปลงข้อมูลเป็น Medical-grade Data Asset สำหรับสร้างมูลค่าส่งต่อธุรกิจกลุ่มประกันภัย</p>", unsafe_allow_html=True)
+        
+        vet_choice = st.selectbox("การวินิจฉัยและรับรองรหัสโรคขั้นสุดท้าย:", ["Gastritis (โรคกระเพาะอาหารอักเสบ)", "Foreign Body Obstruction (สิ่งแปลกปลอมอุดตัน)", "Parvovirus (ลำไส้อักเสบติดต่อ)"])
+        if st.button("บันทึกและอนุมัติการรับรองแพทย์ (Verify Sign-Off)", type="primary", use_container_width=True):
+            st.success("โครงสร้างชุดข้อมูลได้รับการอนุมัติและจัดเก็บในระบบความปลอดภัยสูงเรียบร้อยแล้ว")
+
+    st.write("<br>", unsafe_allow_html=True)
 
     # Feature 3: Referral Tracking
-    st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
-    st.markdown("<p class='feature-tag'>Feature 3 • Referral Tracking & Commission</p>", unsafe_allow_html=True)
-    st.markdown("<p class='section-title'>ระบบติดตามและคำนวณผลประโยชน์พาร์ตเนอร์</p>", unsafe_allow_html=True)
-    
-    col_c1, col_c2 = st.columns(2)
-    with col_c1:
-        st.metric(label="จำนวนดาวน์โหลดผ่าน QR ประจำคลินิก", value="142 ราย")
-    with col_c2: # --- FIXED BUG: เปลี่ยนจาก col_v2 เป็น col_c2 เรียบร้อยครับ ---
-        st.metric(label="ค่าคอมมิชชันสะสมเดือนปัจจุบัน", value="4,260 THB")
-    st.markdown("</div>", unsafe_allow_html=True)
+    with st.container(border=True):
+        st.markdown("<p class='feature-context'>Feature 3 • Referral Tracking & Commission</p>", unsafe_allow_html=True)
+        st.markdown("<h3 class='block-heading'>สถิติและผลประโยชน์พาร์ตเนอร์สถานพยาบาล</h3>", unsafe_allow_html=True)
+        
+        col_c1, col_c2 = st.columns(2)
+        with col_c1:
+            st.metric(label="ยอดผู้สมัครงานผ่านรหัส QR คลินิกนี้", value="142 ราย")
+        with col_c2:
+            st.metric(label="ค่าส่วนแบ่งคอมมิชชันสะสมเดือนนี้", value="4,260 THB")
+        st.write("<br>", unsafe_allow_html=True)
+        st.button("ดาวน์โหลดไฟล์ระบบรหัส QR Code ประจำสถานพยาบาล", use_container_width=True)
 
 
 # ==========================================
 # 3. ฝั่งระบบหลังบ้าน (Backend Infrastructure)
 # ==========================================
-elif user_role == "Backend Infrastructure":
+elif current_workspace == "🌐 โครงสร้างการเชื่อมต่อข้อมูลหลังบ้าน (Backend Infrastructure)":
     
     # Feature 1: Insurance API Gateway
-    st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
-    st.markdown("<p class='feature-tag'>Phase 2 • Insurance API Gateway</p>", unsafe_allow_html=True)
-    st.markdown("<p class='section-title'>โครงสร้างเชื่อมต่อข้อมูลพาร์ตเนอร์ประกันภัย</p>", unsafe_allow_html=True)
-    
-    api_table = pd.DataFrame({
-        'Partner กลุ่มประกันภัย': ['AIA Pet Protect', 'Bangkok Insurance (BKI)', 'Tip Pet Care'],
-        'สถานะการเชื่อมต่อ Gateway': ['Connected (Active)', 'Ready to Test', 'In Discussion'],
-        'ส่วนลดเบี้ยประกันภัยฐานราก': ['10%', '15%', 'TBD']
-    })
-    st.table(api_table)
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Feature 2: Hardware Integration
-    st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
-    st.markdown("<p class='feature-tag'>Phase 3 • Hardware Integration (Smart Collar)</p>", unsafe_allow_html=True)
-    st.markdown("<p class='section-title'>โมดูลซิงก์ข้อมูลอุปกรณ์สวมใส่ผ่าน API</p>", unsafe_allow_html=True)
-    
-    col_i1, col_i2, col_i3 = st.columns(3)
-    with col_i1:
-        st.metric(label="อัตราการเต้นของหัวใจ", value="94 bpm")
-    with col_i2:
-        st.metric(label="อุณหภูมิร่างกายเฉลี่ย", value="38.6 °C")
-    with col_i3:
-        st.metric(label="ดัชนีพฤติกรรมการเคลื่อนไหว", value="-5%")
+    with st.container(border=True):
+        st.markdown("<p class='feature-context'>Phase 2 • Insurance API Gateway</p>", unsafe_allow_html=True)
+        st.markdown("<h3 class='block-heading'>สถาปัตยกรรมเชื่อมต่อข้อมูลกลุ่มพันธมิตรประกันภัย</h3>", unsafe_allow_html=True)
         
-    st.progress(0.85, text="ความเสถียรของช่องสัญญาณจำลองฮาร์ดแวร์ (API Sync Rate): 85%")
-    st.markdown("</div>", unsafe_allow_html=True)
+        api_table = pd.DataFrame({
+            'ชื่อหน่วยงานประกันภัยพาร์ตเนอร์': ['AIA Pet Protect', 'Bangkok Insurance (BKI)', 'Tip Pet Care'],
+            'สถานะช่องสัญญาณ Gateway': ['Connected (Active)', 'Ready to Test', 'In Discussion'],
+            'ส่วนลดเบี้ยประกันภัยส่งมอบให้ลูกค้า': ['10%', '15%', 'TBD']
+        })
+        st.table(api_table)
+
+    st.write("<br>", unsafe_allow_html=True)
+
+    # Feature 2: Hardware Integration
+    with st.container(border=True):
+        st.markdown("<p class='feature-context'>Phase 3 • Hardware Integration (Smart Collar)</p>", unsafe_allow_html=True)
+        st.markdown("<h3 class='block-heading'>โมดูลซิงก์ข้อมูลอุปกรณ์สวมใส่อัจฉริยะแบบ Real-time</h3>", unsafe_allow_html=True)
+        
+        col_i1, col_i2, col_i3 = st.columns(3)
+        with col_i1: st.metric(label="อัตราเต้นหัวใจสัตว์เลี้ยง", value="94 bpm")
+        with col_i2: st.metric(label="อุณหภูมิร่างกายเฉลี่ย", value="38.6 °C")
+        with col_i3: st.metric(label="ดัชนีการเคลื่อนไหวทางกาย", value="-5%")
+            
+        st.write("<br>", unsafe_allow_html=True)
+        st.progress(0.85, text="เสถียรภาพการซิงก์ชุดข้อมูลสัญญาณฮาร์ดแวร์จำลอง (API Sync Rate): 85%")
