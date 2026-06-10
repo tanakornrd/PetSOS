@@ -1,85 +1,124 @@
 import streamlit as st
 
-# ตั้งค่าหน้าเพจ
-st.set_page_config(page_title="PetSOS Mockup", page_icon="🐾", layout="centered")
+# --- 1. System Configuration ---
+st.set_page_config(page_title="PetSOS", page_icon="🐾", layout="centered", initial_sidebar_state="collapsed")
 
-# ระบบจัดการหน้า (Session State)
+# --- 2. Apple-Style CSS Injection ---
+st.markdown("""
+    <style>
+        /* Typography - Apple Native Feel & Thai Prompt Font */
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap');
+        
+        html, body, [class*="css"], .stMarkdown {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Prompt", sans-serif !important;
+        }
+
+        /* Clean whitespace and hidden elements */
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        header {visibility: hidden;}
+
+        /* Button Styling - Pill shape, smooth hover */
+        .stButton > button {
+            border-radius: 14px !important;
+            font-weight: 600 !important;
+            font-size: 16px !important;
+            padding: 10px 24px !important;
+            border: none !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+            transition: all 0.2s ease-in-out !important;
+        }
+        
+        .stButton > button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .stButton > button:active {
+            transform: scale(0.96);
+        }
+
+        /* Primary Button Color (Apple Blue) */
+        button[kind="primary"] {
+            background-color: #007AFF !important;
+            color: white !important;
+        }
+
+        /* Callout / Alert Cards */
+        div[data-testid="stAlert"] {
+            border-radius: 16px !important;
+            border: none !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+        }
+        
+        /* Selectbox/Radio Styling */
+        div[data-baseweb="select"] > div {
+            border-radius: 12px !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# --- 3. Session State Management ---
 if 'page' not in st.session_state:
     st.session_state.page = 'home'
 
 def go_to_page(page_name):
     st.session_state.page = page_name
 
-# ----------------- หน้า 1: Home (The Trigger) -----------------
+# --- 4. Page 1: Home ---
 if st.session_state.page == 'home':
-    st.title("🐾 PetSOS")
-    st.markdown("### แผนที่นำทางยามวิกฤต สำหรับพ่อแม่สัตว์เลี้ยง")
-    st.info("ระบบคัดกรองความเร่งด่วนทางการแพทย์ (AI Triage Protocol)")
+    st.markdown("<h1 style='text-align: center; font-weight: 600; letter-spacing: -0.5px;'>🐾 PetSOS</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #666; font-size: 18px; margin-bottom: 30px;'>ระบบคัดกรองความเร่งด่วนทางการแพทย์</p>", unsafe_allow_html=True)
     
-    st.error("🚨 **คำเตือน:** หากสัตว์เลี้ยงหมดสติ ชัก หรือหยุดหายใจ (Code Red) กรุณารีบพาส่งโรงพยาบาลทันทีโดยไม่ต้องรอประเมิน")
+    st.error("🚨 **Code Red:** หากสัตว์เลี้ยงหมดสติ ชัก หรือหยุดหายใจ กรุณารีบพาส่งโรงพยาบาลทันทีโดยไม่ต้องประเมิน")
     
-    st.write("---")
-    st.markdown("<h4 style='text-align: center;'>สัตว์เลี้ยงของคุณมีอาการผิดปกติใช่หรือไม่?</h4>", unsafe_allow_html=True)
-    
-    # ปุ่มแดงใหญ่ ดึงดูดสายตาคนกำลังแพนิก
+    st.write("") # Spacer
     if st.button("🆘 เริ่มประเมินอาการฉุกเฉิน", type="primary", use_container_width=True):
         go_to_page('triage')
 
-# ----------------- หน้า 2: Triage Form (The Engage) -----------------
+# --- 5. Page 2: Triage Form ---
 elif st.session_state.page == 'triage':
-    st.title("🩺 ประเมินอาการ (AI Triage)")
-    st.write("กรุณาตอบคำถามเบื้องต้นเพื่อให้ระบบประเมินระดับความฉุกเฉิน")
+    st.markdown("<h2 style='font-weight: 600;'>🩺 ประเมินอาการ</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #666;'>กรุณาเลือกข้อมูลที่ตรงกับสัตว์เลี้ยงของคุณมากที่สุด</p>", unsafe_allow_html=True)
     
-    # แบบฟอร์มจำลองการทำงานของ AI
-    species = st.selectbox("1. สัตว์เลี้ยงของคุณคืออะไร?", ["สุนัข", "แมว", "สัตว์แปลก (Exotic)"])
-    symptom = st.selectbox("2. อาการหลักที่พบ (เลือกอาการที่หนักที่สุด)", 
-                           ["เลือกอาการ...", 
-                            "อาเจียนไม่หยุด / ถ่ายเหลวรุนแรง", 
-                            "ซึม ไม่กินอาหาร", 
-                            "มีบาดแผลเล็กน้อย / ขากะเผลก", 
-                            "หายใจหอบลำบาก / เหงือกซีด"])
-    duration = st.slider("3. มีอาการมานานแค่ไหนแล้ว (ชั่วโมง)?", 1, 48, 1)
-
-    st.write("---")
+    # Use Radio buttons instead of Selectbox for faster 1-tap mobile experience
+    st.write("**1. สัตว์เลี้ยงของคุณคืออะไร?**")
+    species = st.radio("ชนิดสัตว์เลี้ยง", ["🐶 สุนัข", "🐱 แมว", "🦜 สัตว์แปลก (Exotic)"], label_visibility="collapsed")
+    
+    st.write("")
+    st.write("**2. อาการหลักที่พบ (อาการที่กังวลที่สุด)**")
+    symptom = st.radio("อาการ", [
+        "อาเจียนไม่หยุด / ถ่ายเหลว", 
+        "ซึม ไม่กินอาหาร", 
+        "หายใจหอบลำบาก / เหงือกซีด",
+        "มีบาดแผลเลือดออก"
+    ], label_visibility="collapsed")
+    
+    st.write("") # Spacer
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("⬅️ ย้อนกลับ", use_container_width=True):
+        if st.button("⬅️ ย้อนกลับ", use_container_width=True): 
             go_to_page('home')
     with col2:
         if st.button("ประเมินผล ➡️", type="primary", use_container_width=True):
-            if symptom != "เลือกอาการ...":
-                st.session_state.symptom = symptom
-                go_to_page('result')
-            else:
-                st.warning("กรุณาเลือกอาการก่อนทำการประเมิน")
+            st.session_state.symptom = symptom
+            go_to_page('result')
 
-# ----------------- หน้า 3: Result (The Exit & Monetization) -----------------
+# --- 6. Page 3: Result ---
 elif st.session_state.page == 'result':
-    st.title("📊 ผลการประเมินเบื้องต้น")
+    st.markdown("<h2 style='font-weight: 600;'>📊 ผลการประเมินเบื้องต้น</h2>", unsafe_allow_html=True)
     symptom = st.session_state.get('symptom', '')
     
-    # Logic จำลองการจัด Category สี
-    if symptom == "หายใจหอบลำบาก / เหงือกซีด" or symptom == "อาเจียนไม่หยุด / ถ่ายเหลวรุนแรง":
-        st.warning("⚠️ **ระดับสีส้ม (Orange): ความเสี่ยงสูง**")
-        st.write("อาการของน้องค่อนข้างน่าเป็นห่วง แนะนำให้ปรึกษาสัตวแพทย์อย่างเร่งด่วน หรือเตรียมตัวนำส่งสถานพยาบาล")
-        st.button("📞 วิดีโอคอลกับสัตวแพทย์ (รอคิว 5 นาที)", type="primary", use_container_width=True)
-        
-    elif symptom == "ซึม ไม่กินอาหาร" or symptom == "มีบาดแผลเล็กน้อย / ขากะเผลก":
-        st.info("🟡 **ระดับสีเหลือง (Yellow): ความเร่งด่วนต่ำ**")
-        st.write("อาการยังไม่เข้าขั้นวิกฤต แนะนำให้ปรึกษาสัตวแพทย์ผ่านระบบ Telemedicine เพื่อประเมินซ้ำและรับคำแนะนำการปฐมพยาบาล")
-        st.button("💬 ปรึกษาสัตวแพทย์ทางไกล", use_container_width=True)
-        
+    # Triage Logic Application
+    if "หายใจหอบลำบาก" in symptom or "อาเจียนไม่หยุด" in symptom or "เลือดออก" in symptom:
+        st.warning("⚠️ **ระดับสีส้ม (Urgent):** ความเสี่ยงสูง\n\nแนะนำให้ปรึกษาสัตวแพทย์อย่างเร่งด่วนเพื่อประเมินอาการอย่างละเอียด")
     else:
-        st.success("🟢 **ระดับสีเขียว (Green): ไม่เร่งด่วน**")
-        st.write("สามารถสังเกตอาการที่บ้านได้ 24-48 ชั่วโมง หากอาการไม่ดีขึ้นกรุณาติดต่อสัตวแพทย์")
+        st.info("🟡 **ระดับสีเหลือง (Observe):** ความเร่งด่วนต่ำ\n\nสามารถเฝ้าดูอาการที่บ้านได้ หรือปรึกษาแพทย์ผ่านระบบ Telemedicine เพื่อความสบายใจ")
         
-    st.write("---")
-    # จุดทำเงิน: เสนอขาย Subscription ตอนที่ลูกค้าโล่งใจแล้ว
-    st.markdown("💡 **อยากดูแลน้องให้มั่นใจกว่าเดิมไหม?**")
-    st.success("สมัคร PetSOS Premium วันนี้ รับสิทธิ์ปรึกษาแพทย์ฟรี 1 ครั้ง/เดือน และระบบ AI Health Timeline ดูแลสุขภาพระยะยาว")
-    st.button("✨ ดูรายละเอียด Premium", use_container_width=True)
+    st.write("")
+    st.success("✨ **PetSOS Premium**\n\nอัปเกรดวันนี้ รับสิทธิ์ปรึกษาสัตวแพทย์ทางไกล (Telemedicine) ฟรี 1 ครั้ง/เดือน")
     
-    st.write(" ")
+    st.write("") # Spacer
     if st.button("กลับหน้าหลัก", use_container_width=True):
         st.session_state.symptom = ''
         go_to_page('home')
