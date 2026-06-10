@@ -5,14 +5,12 @@ import numpy as np
 # --- 1. System Configuration & Clean Apple UI Architecture ---
 st.set_page_config(page_title="PetSOS Ecosystem", page_icon="🐾", layout="centered")
 
-# Surgical CSS Injection (แก้ไขจุดบั๊กสากลและกล่อง Upload)
+# Advanced CSS Injection (ย้ายเมนูมาไว้ด้านบน + สไตล์พรีเมียมตัวเต็ม)
 st.markdown("""
     <style>
-        /* Import Premium Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
         
-        /* Targeted Typography Fix - หลีกเลี่ยงการใช้ [class*="css"] ที่ทำระบบพัง */
-        html, body, .stApp, .stMarkdown, h1, h2, h3, p, label, .stSelectbox, .stTextInput {
+        html, body, .stApp, .stMarkdown, h1, h2, h3, p, label {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Prompt", sans-serif !important;
             color: #1D1D1F;
         }
@@ -22,65 +20,73 @@ st.markdown("""
 
         /* Premium Apple Heading Style */
         .apple-hero-title {
-            font-size: 46px !important;
+            font-size: 42px !important;
             font-weight: 700 !important;
-            letter-spacing: -1.2px !important;
-            line-height: 1.1 !important;
-            background: linear-gradient(180deg, #1D1D1F 0%, #434344 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px !important;
             text-align: center;
             margin-bottom: 5px;
+            color: #1D1D1F;
         }
         
         .apple-sub-title {
-            font-size: 19px !important;
+            font-size: 18px !important;
             font-weight: 400 !important;
             color: #86868B !important;
             text-align: center;
-            letter-spacing: -0.2px !important;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
         }
 
         .apple-section-title {
-            font-size: 24px !important;
+            font-size: 22px !important;
             font-weight: 600 !important;
             letter-spacing: -0.5px !important;
             margin-bottom: 15px;
         }
 
-        /* Safe Containers - No overlap */
-        div[data-testid="stAlert"], div[data-testid="stMetric"] {
-            background: rgba(255, 255, 255, 0.85) !important;
-            backdrop-filter: blur(20px) !important;
-            border-radius: 22px !important;
-            border: 1px solid rgba(255, 255, 255, 0.5) !important;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04) !important;
+        /* --- 📱 โครงสร้างแผงควบคุมด้านบนสไตล์ Apple Segmented Control --- */
+        div[data-testid="stRadio"] {
+            background: #E8E8ED !important;
+            padding: 6px !important;
+            border-radius: 16px !important;
+            margin-bottom: 30px !important;
+        }
+        div[data-testid="stRadio"] > label {
+            display: none !important; /* ซ่อนหัวข้อตัวเลือกเพื่อความคลีน */
+        }
+        div[data-testid="stRadio"] > div {
+            flex-direction: row !important;
+            justify-content: space-around !important;
+            gap: 10px !important;
+        }
+        div[data-testid="stRadio"] label p {
+            font-weight: 500 !important;
+            font-size: 14px !important;
+            color: #1D1D1F !important;
         }
 
-        /* --- 🩹 CRITICAL FIX: File Uploader Patch --- */
+        /* Apple Cards */
+        div[data-testid="stAlert"], div[data-testid="stMetric"] {
+            background: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(20px) !important;
+            border-radius: 20px !important;
+            border: 1px solid rgba(255, 255, 255, 0.5) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02) !important;
+        }
+
+        /* File Uploader บล็อกแก้บั๊ก */
         div[data-testid="stFileUploader"] section {
             background-color: #FFFFFF !important;
             border: 1px dashed #D2D2D7 !important;
             border-radius: 16px !important;
-            padding: 20px !important;
         }
-        div[data-testid="stFileUploader"] label p {
-            font-weight: 500 !important;
-            color: #1D1D1F !important;
-        }
-        /* คืนค่าปุ่มภายใน File Uploader ไม่ให้ซ้อนทับ */
         div[data-testid="stFileUploader"] button {
-            width: auto !important;
             border-radius: 10px !important;
-            padding: 6px 16px !important;
             background-color: #F5F5F7 !important;
             color: #007AFF !important;
-            font-size: 14px !important;
             border: none !important;
         }
 
-        /* Standard Native Buttons Layout */
+        /* ปุ่มกดมาตรฐาน */
         .stButton > button {
             border-radius: 14px !important;
             font-weight: 500 !important;
@@ -89,38 +95,24 @@ st.markdown("""
             border: 1px solid #E8E8ED !important;
             background-color: #FFFFFF !important;
             color: #007AFF !important;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02) !important;
             transition: all 0.2s ease !important;
             width: 100% !important;
         }
-        .stButton > button:hover {
-            background-color: #F5F5F7 !important;
-            transform: translateY(-1px);
-        }
-        button[kind="primary"] {
-            background-color: #007AFF !important;
-            color: #FFFFFF !important;
-            border: none !important;
-        }
+        .stButton > button:hover { background-color: #F5F5F7 !important; }
+        button[kind="primary"] { background-color: #007AFF !important; color: #FFFFFF !important; border: none !important; }
         button[kind="primary"]:hover { background-color: #0062CC !important; }
 
-        /* SOS High-Stakes Button */
+        /* SOS Button */
         .sos-container button {
             background: linear-gradient(135deg, #FF3B30 0%, #FF453A 100%) !important;
             color: white !important;
             border: none !important;
-            font-size: 18px !important;
+            font-size: 16px !important;
             font-weight: 600 !important;
-            padding: 18px !important;
-            border-radius: 18px !important;
-            box-shadow: 0 6px 20px rgba(255, 59, 48, 0.3) !important;
+            border-radius: 14px !important;
+            box-shadow: 0 4px 15px rgba(255, 59, 48, 0.2) !important;
         }
         .sos-container button:hover { background: #E03126 !important; }
-
-        div[data-baseweb="select"] > div, div[data-baseweb="input"] > div {
-            border-radius: 12px !important;
-        }
-        .stTable { border-radius: 16px !important; overflow: hidden !important; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -128,20 +120,23 @@ st.markdown("""
 if 'page' not in st.session_state: st.session_state.page = 'b2c_home'
 if 'triage_result' not in st.session_state: st.session_state.triage_result = None
 
-# --- 3. Strategic Workspace Switcher ---
-st.sidebar.markdown("<p style='font-weight:600; color:#868686; font-size:12px; letter-spacing:0.5px;'>INVESTOR CONTROL PANEL</p>", unsafe_allow_html=True)
-user_role = st.sidebar.radio("สลับมุมมองเพื่อตรวจงาน:", [
-    "📱 ฝั่งผู้ใช้ทั่วไป (B2C App)", 
-    "🩺 ฝั่งสัตวแพทย์ (B2B Portal)", 
-    "🌐 หลังบ้าน & Ecosystem (Phases 2-3)"
-])
+# --- 3. Main Brand Header ---
+st.markdown("<h1 class='apple-hero-title'>PetSOS</h1>", unsafe_allow_html=True)
+st.markdown("<p class='apple-sub-title'>Platform Ecosystem Demonstration</p>", unsafe_allow_html=True)
+
+# --- 4. Investor Top Navigation Bar (เห็นเด่นชัด 100% ด้านบนสุด) ---
+st.markdown("<p style='font-weight:700; color:#86868B; font-size:11px; letter-spacing:1px; text-align:center; margin-bottom:5px;'>INVESTOR PLATFORM CONTROL</p>", unsafe_allow_html=True)
+user_role = st.radio(
+    "ตัวเลือกมุมมองระบบ:",
+    ["📱 ฝั่งผู้ใช้ (B2C App)", "🩺 ฝั่งสัตวแพทย์ (B2B Portal)", "🌐 หลังบ้าน (Phases 2-3)"],
+    horizontal=True
+)
+st.write("<br>", unsafe_allow_html=True)
 
 # ==========================================
 # 1. ฝั่งผู้ใช้งานทั่วไป (Pet Parents - B2C App)
 # ==========================================
-if user_role == "📱 ฝั่งผู้ใช้ทั่วไป (B2C App)":
-    st.markdown("<h1 class='apple-hero-title'>PetSOS</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='apple-sub-title'>Medical Decision Support & Triage Platform</p>", unsafe_allow_html=True)
+if user_role == "📱 ฝั่งผู้ใช้ (B2C App)":
     
     st.markdown("<p style='font-weight:600; font-size:14px; color:#86868B; margin-bottom:5px;'>[Feature 1] One-Tap SOS</p>", unsafe_allow_html=True)
     st.markdown("<div class='sos-container'>", unsafe_allow_html=True)
@@ -156,8 +151,8 @@ if user_role == "📱 ฝั่งผู้ใช้ทั่วไป (B2C App)
         st.markdown("<p class='apple-section-title'>[Feature 2] AI Triage Engine</p>", unsafe_allow_html=True)
         
         species = st.selectbox("ชนิดสัตว์เลี้ยงของคุณ", ["สุนัข", "แมว", "สัตว์แปลก (Exotic)"])
-        user_input = st.text_input("ระบุอาการของสัตว์เลี้ยงอย่างกระชับ:", placeholder="เช่น สุนัขมีอาการชักและหมดสติ หรือ ซึมไม่กินอาหาร")
-        uploaded_file = st.file_uploader("📸 แนบรูปภาพหรือวิดีโออาการสั้นเพื่อเพิ่มความแม่นยำ (Optional)", type=['png','jpg','mp4'])
+        user_input = st.text_input("ระบุอาการของสัตว์เลี้ยงอย่างกระชับ:", placeholder="เช่น สุนัขมีอาการชัก หรือ ซึมไม่กินอาหาร")
+        uploaded_file = st.file_uploader("📸 แนบรูปภาพหรือวิดีโออาการสั้น (Optional)", type=['png','jpg','mp4'])
         
         st.write("<br>", unsafe_allow_html=True)
         if st.button("ส่งข้อมูลให้ AI ประเมินผล ➡️", type="primary", use_container_width=True):
@@ -222,9 +217,6 @@ if user_role == "📱 ฝั่งผู้ใช้ทั่วไป (B2C App)
 # 2. ฝั่งสัตวแพทย์และคลินิกพันธมิตร (B2B Portal)
 # ==========================================
 elif user_role == "🩺 ฝั่งสัตวแพทย์ (B2B Portal)":
-    st.markdown("<h1 class='apple-hero-title'>Vet Portal</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='apple-sub-title'>B2B Clinical Workstation & Data Labeling</p>", unsafe_allow_html=True)
-    
     st.markdown("<p class='apple-section-title'>📊 [Feature 1] Vet Dashboard & AI Executive Summary</p>", unsafe_allow_html=True)
     st.info("🩺 **Incoming Case:** สุนัข สายพันธุ์โกลเด้น รีทรีฟเวอร์ (อายุ 5 ปี)")
     
@@ -256,10 +248,7 @@ elif user_role == "🩺 ฝั่งสัตวแพทย์ (B2B Portal)":
 # ==========================================
 # 3. ฝั่งระบบหลังบ้านและการเชื่อมต่อในอนาคต (Backend)
 # ==========================================
-elif user_role == "🌐 หลังบ้าน & Ecosystem (Phases 2-3)":
-    st.markdown("<h1 class='apple-hero-title'>Infrastructure</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='apple-sub-title'>Backend Architecture & Ecosystem Growth Blueprint</p>", unsafe_allow_html=True)
-    
+elif user_role == "🌐 หลังบ้าน (Phases 2-3)":
     st.markdown("<p class='apple-section-title'>🛡️ [Feature 1] Insurance API Gateway (Phase 2)</p>", unsafe_allow_html=True)
     
     insurance_mock = pd.DataFrame({
