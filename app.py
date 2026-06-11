@@ -1,15 +1,16 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 
 # --- 1. System Configuration ---
 st.set_page_config(page_title="PetSOS", page_icon="🐾", layout="centered")
 
-# --- 2. Apple Store Exact CSS Architecture + Ultimate Uploader Fix ---
+# --- 2. Apple Store Exact CSS Architecture ---
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
         
-        /* 1. Global Typography & Background */
+        /* Global Typography & Background */
         html, body, .stApp, .stMarkdown, p, span, h1, h2, h3, h4, label {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Prompt", sans-serif !important;
             color: #1D1D1F;
@@ -17,7 +18,7 @@ st.markdown("""
         .stApp { background-color: #F5F5F7 !important; }
         header, footer, #MainMenu { visibility: hidden !important; }
 
-        /* 2. Apple Store Hero Headings */
+        /* Apple Store Hero Headings */
         .apple-hero {
             font-size: 46px;
             font-weight: 700;
@@ -35,16 +36,14 @@ st.markdown("""
             letter-spacing: -0.5px;
         }
 
-        /* 3. Segmented Control (Top Nav) */
+        /* Segmented Control (Top Nav) */
         div[data-testid="stRadio"] > div {
             background-color: #E8E8ED !important;
             padding: 4px !important;
             border-radius: 12px !important;
             gap: 4px !important;
         }
-        div[data-testid="stRadio"] div[role="radio"] div:first-child {
-            display: none !important;
-        }
+        div[data-testid="stRadio"] div[role="radio"] div:first-child { display: none !important; }
         div[data-testid="stRadio"] div[role="radio"] {
             padding: 8px 12px !important;
             border-radius: 8px !important;
@@ -62,7 +61,7 @@ st.markdown("""
             color: #1D1D1F !important;
         }
 
-        /* 4. White Card Containers */
+        /* White Card Containers */
         div[data-testid="stVerticalBlockBorderWrapper"] {
             background-color: #FFFFFF !important;
             border-radius: 18px !important;
@@ -72,21 +71,20 @@ st.markdown("""
             margin-bottom: 20px !important;
         }
 
-        /* 5. Inputs & Dropdowns */
+        /* Inputs & Dropdowns */
         div[data-baseweb="select"] > div, div[data-baseweb="input"] > div {
             border-radius: 12px !important;
             border: 1px solid #D2D2D7 !important;
             background-color: #F5F5F7 !important;
         }
         
-        /* --- 🩹 ULTIMATE FIX: File Uploader Lock --- */
+        /* File Uploader Lock */
         div[data-testid="stFileUploader"] section {
             border: 1px dashed #D2D2D7 !important;
             background-color: #F5F5F7 !important;
             border-radius: 12px !important;
             padding: 15px !important;
         }
-        /* บังคับปุ่มอัปโหลดไม่ให้พับบรรทัดและบังคับความกว้างตามตัวอักษรเพื่อกันฟอนต์ซ้อน */
         div[data-testid="stFileUploader"] button {
             white-space: nowrap !important;
             width: max-content !important;
@@ -95,7 +93,7 @@ st.markdown("""
             border-radius: 8px !important;
         }
 
-        /* 6. Standard Apple Buttons */
+        /* Standard Apple Buttons */
         div[data-testid="stButton"] > button {
             border-radius: 12px !important;
             font-weight: 500 !important;
@@ -113,6 +111,13 @@ st.markdown("""
             color: white !important;
         }
         div[data-testid="stButton"] > button[kind="primary"]:hover { background-color: #0062CC !important; }
+
+        /* Metric Styling override */
+        div[data-testid="stMetricValue"] {
+            font-size: 24px !important;
+            font-weight: 700 !important;
+            color: #1D1D1F !important;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -173,6 +178,46 @@ if selected_workspace == '📱 B2C (ผู้ใช้)':
                 navigate('result')
                 st.rerun()
 
+        # NEW Feature: AI Behavioral Insights Dashboard (B2C)
+        with st.container(border=True):
+            st.markdown("<h3 style='margin-bottom:0px; font-size:22px; font-weight:700;'>📊 AI Behavioral Insights</h3>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#86868B; font-size:15px; margin-bottom:15px; font-weight:500;'>ติดตามและแปลภาษาพฤติกรรมสัตว์เลี้ยงของคุณ</p>", unsafe_allow_html=True)
+            if st.button("ดูข้อมูลวิเคราะห์เชิงลึก ➡️"):
+                navigate('insights')
+                st.rerun()
+
+    # ---------------- PAGE: AI INSIGHTS (Dashboard) ----------------
+    elif st.session_state.page == 'insights':
+        st.markdown("<div class='apple-hero'>AI Insights</div>", unsafe_allow_html=True)
+        st.markdown("<div class='apple-subhero'>วิเคราะห์พฤติกรรมเชิงลึกของสัตว์เลี้ยง</div>", unsafe_allow_html=True)
+
+        with st.container(border=True):
+            st.markdown("<h3 style='font-size:20px; font-weight:700;'>📊 สถิติพฤติกรรม (รอบ 7 วัน)</h3>", unsafe_allow_html=True)
+            col1, col2, col3 = st.columns(3)
+            col1.metric("ดัชนีความเครียด", "12 ครั้ง", "-15%")
+            col2.metric("คุณภาพการนอน", "8.5 ชม.", "+20%")
+            col3.metric("อาการซึม/หลบมุม", "2 ครั้ง", "-5%")
+
+            st.write("<br>", unsafe_allow_html=True)
+            st.markdown("<p style='font-size:14px; font-weight:600;'>แนวโน้มความผิดปกติ (Anomaly Trend)</p>", unsafe_allow_html=True)
+            
+            # Mock Data for Behavioral Timeline
+            chart_data = pd.DataFrame(
+                np.random.randint(0, 10, size=(7, 2)),
+                columns=['กระวนกระวาย/เดินวน', 'เกา/เลียผิดปกติ'],
+                index=['จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.', 'อา.']
+            )
+            st.line_chart(chart_data)
+
+        with st.container(border=True):
+            st.markdown("<h3 style='font-size:18px; font-weight:700;'>🔔 Preventive Reminders</h3>", unsafe_allow_html=True)
+            st.info("📅 ครบกำหนดหยอดยาป้องกันเห็บหมัดในอีก 3 วัน (ระบบ Premium จะแจ้งเตือนล่วงหน้า)")
+
+        st.write("<br>", unsafe_allow_html=True)
+        if st.button("⬅️ กลับหน้าหลัก"):
+            navigate('home')
+            st.rerun()
+
     # ---------------- PAGE: SOS (Code Red) ----------------
     elif st.session_state.page == 'sos':
         st.markdown("<div class='apple-hero' style='color:#FF3B30;'>Code Red</div>", unsafe_allow_html=True)
@@ -181,10 +226,8 @@ if selected_workspace == '📱 B2C (ผู้ใช้)':
         with st.container(border=True):
             st.markdown("<h3 style='font-size:20px; font-weight:700;'>📍 โรงพยาบาลสัตว์จุฬาลงกรณ์</h3>", unsafe_allow_html=True)
             st.markdown("<p style='color:#86868B; font-size:15px; font-weight:500;'>ห่างจากตำแหน่งของคุณ 2.4 กม.</p>", unsafe_allow_html=True)
-            
             map_data = pd.DataFrame({'lat': [13.7367], 'lon': [100.5331]})
             st.map(map_data)
-            
             st.markdown("""<style>div[data-testid="stButton"] button { background-color: #FF3B30 !important; color: white !important; font-weight: 600 !important; }</style>""", unsafe_allow_html=True)
             st.button("📞 โทรสายด่วนทันที")
             
@@ -223,11 +266,35 @@ if selected_workspace == '📱 B2C (ผู้ใช้)':
 # ==========================================
 elif selected_workspace == '🩺 B2B (คลินิก)':
     st.markdown("<div class='apple-hero'>Vet Portal</div>", unsafe_allow_html=True)
-    st.markdown("<div class='apple-subhero'>พื้นที่ปฏิบัติงานสัตวแพทย์พันธมิตร</div>", unsafe_allow_html=True)
+    st.markdown("<div class='apple-subhero'>พื้นที่ปฏิบัติงานและบริหารจัดการคลินิก</div>", unsafe_allow_html=True)
 
+    # NEW Feature: Clinic Economics Tracker (B2B)
     with st.container(border=True):
-        st.markdown("<h3 style='font-size:20px; font-weight:700;'>ข้อมูลผู้ป่วย (AI Summary)</h3>", unsafe_allow_html=True)
-        st.info("สุนัข สายพันธุ์โกลเด้น รีทรีฟเวอร์ (อายุ 5 ปี) - เสี่ยงภาวะ Gastritis")
+        st.markdown("<h3 style='font-size:20px; font-weight:700;'>📈 Clinic Economics Tracker</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px;'>สรุปผลประกอบการและเคสส่งต่อจากแพลตฟอร์ม PetSOS</p>", unsafe_allow_html=True)
+        
+        c1, c2, c3 = st.columns(3)
+        c1.metric("เคสส่งต่อ (Referrals)", "42 เคส", "+12%")
+        c2.metric("รายได้จาก Telemed", "฿14,700", "+8%")
+        c3.metric("Conversion Rate", "68%", "ยอดเยี่ยม")
+
+    # NEW Feature: Live Triage Board (B2B)
+    with st.container(border=True):
+        st.markdown("<h3 style='font-size:20px; font-weight:700;'>📋 Live Triage Board</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px;'>คิวคนไข้รอรับบริการ (เรียลไทม์)</p>", unsafe_allow_html=True)
+        
+        triage_data = pd.DataFrame({
+            'คิว': ['#012', '#013', '#014'],
+            'ระดับ': ['🟧 สีส้ม (Urgent)', '🟨 สีเหลือง (Observe)', '🟨 สีเหลือง (Observe)'],
+            'อาการเบื้องต้น': ['อาเจียนต่อเนื่อง 4 ครั้ง', 'ซึม ไม่กินอาหาร 1 วัน', 'เกาหูสะบัดหัวรุนแรง'],
+            'รอคิว': ['04:12 นาที', '11:30 นาที', '14:05 นาที']
+        })
+        st.table(triage_data)
+
+    # Original Vet Dashboard
+    with st.container(border=True):
+        st.markdown("<h3 style='font-size:20px; font-weight:700;'>สรุปข้อมูลผู้ป่วย (AI Summary)</h3>", unsafe_allow_html=True)
+        st.info("เคส #012: สุนัข สายพันธุ์โกลเด้น รีทรีฟเวอร์ (อายุ 5 ปี) - เสี่ยงภาวะ Gastritis")
         
         st.markdown("<p style='font-size:14px; font-weight:600; margin-bottom:4px;'>ยืนยันผลการวินิจฉัย</p>", unsafe_allow_html=True)
         vet_choice = st.selectbox("ยืนยันผลการวินิจฉัย", ["Gastritis", "Foreign Body Obstruction", "Parvovirus"], label_visibility="collapsed")
