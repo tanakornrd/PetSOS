@@ -114,9 +114,13 @@ st.markdown("""
 
         /* Metric Styling override */
         div[data-testid="stMetricValue"] {
-            font-size: 24px !important;
+            font-size: 22px !important;
             font-weight: 700 !important;
             color: #1D1D1F !important;
+        }
+        div[data-testid="stMetricLabel"] {
+            font-size: 13px !important;
+            color: #86868B !important;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -147,13 +151,32 @@ if selected_workspace == '📱 B2C (ผู้ใช้)':
     # ---------------- PAGE: HOME ----------------
     if st.session_state.page == 'home':
         st.markdown("<div class='apple-hero'>PetSOS</div>", unsafe_allow_html=True)
-        st.markdown("<div class='apple-subhero'>คือที่ที่ดีที่สุดในการดูแล<br>สัตว์เลี้ยงที่คุณรัก</div>", unsafe_allow_html=True)
+        st.markdown("<div class='apple-subhero'>ดูแลสัตว์เลี้ยงที่คุณรัก<br>ด้วยข้อมูลและผู้เชี่ยวชาญ</div>", unsafe_allow_html=True)
+        
+        # --- NEW Feature: Pet Basic Profile (Dashboard หน้าแรก) ---
+        with st.container(border=True):
+            st.markdown("<h3 style='margin-bottom:0px; font-size:22px; font-weight:700;'>🐶 ข้อมูลของน้องคูเปอร์ (Cooper)</h3>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px; font-weight:500;'>ข้อมูลพื้นฐานและสถานะสุขภาพวันนี้</p>", unsafe_allow_html=True)
+            
+            p1, p2, p3 = st.columns(3)
+            p1.metric("สายพันธุ์", "โกลเด้นฯ")
+            p2.metric("อายุ", "5 ปี 2 ด.")
+            p3.metric("น้ำหนัก", "28.5 kg")
+            
+            st.markdown("""
+                <div style='background-color:#E8F5E9; padding:10px; border-radius:10px; text-align:center; margin-top:5px;'>
+                    <span style='color:#2E7D32; font-weight:600; font-size:14px;'>🟢 สถานะ: ร่าเริงปกติ (ไม่มีการแจ้งเตือนพฤติกรรม)</span>
+                </div>
+            """, unsafe_allow_html=True)
+
         st.write("<br>", unsafe_allow_html=True)
+        st.markdown("<h3 style='font-size:22px; font-weight:700; text-align:center;'>บริการความช่วยเหลือ</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#86868B; font-size:14px; text-align:center; margin-bottom:20px;'>เลือกเครื่องมือตามระดับความฉุกเฉิน</p>", unsafe_allow_html=True)
 
         # Feature: Code Red
         with st.container(border=True):
-            st.markdown("<h3 style='margin-bottom:0px; font-size:22px; font-weight:700;'>🚨 กรณีฉุกเฉินวิกฤต</h3>", unsafe_allow_html=True)
-            st.markdown("<p style='color:#86868B; font-size:15px; margin-bottom:15px; font-weight:500;'>หากสัตว์เลี้ยงหมดสติ ชัก หรือหยุดหายใจ</p>", unsafe_allow_html=True)
+            st.markdown("<h3 style='margin-bottom:0px; font-size:20px; font-weight:700;'>🚨 กรณีฉุกเฉินวิกฤต</h3>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px; font-weight:500;'>หมดสติ ชัก หรือหยุดหายใจ</p>", unsafe_allow_html=True)
             st.markdown("""<style>div:nth-child(1) > div > div > button { background-color: #FF3B30 !important; color: white !important; font-weight:600 !important; }</style>""", unsafe_allow_html=True)
             if st.button("🔴 ขอความช่วยเหลือด่วน (SOS)"):
                 navigate('sos')
@@ -161,11 +184,12 @@ if selected_workspace == '📱 B2C (ผู้ใช้)':
 
         # Feature: Triage Engine
         with st.container(border=True):
-            st.markdown("<h3 style='margin-bottom:0px; font-size:22px; font-weight:700;'>🩺 ประเมินอาการเบื้องต้น</h3>", unsafe_allow_html=True)
-            st.markdown("<p style='color:#86868B; font-size:15px; margin-bottom:15px; font-weight:500;'>ให้ AI ช่วยคัดกรองความเร่งด่วนทางการแพทย์</p>", unsafe_allow_html=True)
+            st.markdown("<h3 style='margin-bottom:0px; font-size:20px; font-weight:700;'>🩺 ประเมินอาการเบื้องต้น</h3>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px; font-weight:500;'>ให้ AI ช่วยคัดกรองความเร่งด่วน</p>", unsafe_allow_html=True)
             
             st.markdown("<p style='font-size:14px; font-weight:600; margin-bottom:4px;'>ชนิดสัตว์เลี้ยง</p>", unsafe_allow_html=True)
-            species = st.selectbox("ชนิดสัตว์เลี้ยง", ["สุนัข", "แมว", "สัตว์แปลก (Exotic)"], label_visibility="collapsed")
+            # Default to dog since profile says Cooper is a Golden
+            species = st.selectbox("ชนิดสัตว์เลี้ยง", ["สุนัข", "แมว", "สัตว์แปลก (Exotic)"], index=0, label_visibility="collapsed")
             
             st.markdown("<p style='font-size:14px; font-weight:600; margin-bottom:4px; margin-top:10px;'>อาการที่พบ</p>", unsafe_allow_html=True)
             user_input = st.text_input("อาการที่พบ", placeholder="เช่น ซึม อาเจียน หรือ ไม่กินอาหาร", label_visibility="collapsed")
@@ -178,40 +202,39 @@ if selected_workspace == '📱 B2C (ผู้ใช้)':
                 navigate('result')
                 st.rerun()
 
-        # NEW Feature: AI Behavioral Insights Dashboard (B2C)
+        # Feature: AI Behavioral Insights Dashboard (B2C)
         with st.container(border=True):
-            st.markdown("<h3 style='margin-bottom:0px; font-size:22px; font-weight:700;'>📊 AI Behavioral Insights</h3>", unsafe_allow_html=True)
-            st.markdown("<p style='color:#86868B; font-size:15px; margin-bottom:15px; font-weight:500;'>ติดตามและแปลภาษาพฤติกรรมสัตว์เลี้ยงของคุณ</p>", unsafe_allow_html=True)
-            if st.button("ดูข้อมูลวิเคราะห์เชิงลึก ➡️"):
+            st.markdown("<h3 style='margin-bottom:0px; font-size:20px; font-weight:700;'>📊 สถิติพฤติกรรมเชิงลึก</h3>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px; font-weight:500;'>เครื่องมือแปลภาษาพฤติกรรมสัตว์</p>", unsafe_allow_html=True)
+            if st.button("ดูรายงานพฤติกรรม ➡️"):
                 navigate('insights')
                 st.rerun()
 
     # ---------------- PAGE: AI INSIGHTS (Dashboard) ----------------
     elif st.session_state.page == 'insights':
         st.markdown("<div class='apple-hero'>AI Insights</div>", unsafe_allow_html=True)
-        st.markdown("<div class='apple-subhero'>วิเคราะห์พฤติกรรมเชิงลึกของสัตว์เลี้ยง</div>", unsafe_allow_html=True)
+        st.markdown("<div class='apple-subhero'>วิเคราะห์พฤติกรรมเชิงลึกของ Cooper</div>", unsafe_allow_html=True)
 
         with st.container(border=True):
             st.markdown("<h3 style='font-size:20px; font-weight:700;'>📊 สถิติพฤติกรรม (รอบ 7 วัน)</h3>", unsafe_allow_html=True)
             col1, col2, col3 = st.columns(3)
-            col1.metric("ดัชนีความเครียด", "12 ครั้ง", "-15%")
-            col2.metric("คุณภาพการนอน", "8.5 ชม.", "+20%")
-            col3.metric("อาการซึม/หลบมุม", "2 ครั้ง", "-5%")
+            col1.metric("ความเครียด", "12 ครั้ง", "-15%")
+            col2.metric("คุณภาพนอน", "8.5 ชม.", "+20%")
+            col3.metric("ซึม/หลบมุม", "2 ครั้ง", "-5%")
 
             st.write("<br>", unsafe_allow_html=True)
             st.markdown("<p style='font-size:14px; font-weight:600;'>แนวโน้มความผิดปกติ (Anomaly Trend)</p>", unsafe_allow_html=True)
             
-            # Mock Data for Behavioral Timeline
             chart_data = pd.DataFrame(
                 np.random.randint(0, 10, size=(7, 2)),
-                columns=['กระวนกระวาย/เดินวน', 'เกา/เลียผิดปกติ'],
+                columns=['เดินวนกระวนกระวาย', 'เลียเท้าผิดปกติ'],
                 index=['จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.', 'อา.']
             )
             st.line_chart(chart_data)
 
         with st.container(border=True):
             st.markdown("<h3 style='font-size:18px; font-weight:700;'>🔔 Preventive Reminders</h3>", unsafe_allow_html=True)
-            st.info("📅 ครบกำหนดหยอดยาป้องกันเห็บหมัดในอีก 3 วัน (ระบบ Premium จะแจ้งเตือนล่วงหน้า)")
+            st.info("📅 ครบกำหนดหยอด Revolution ในอีก 3 วัน")
 
         st.write("<br>", unsafe_allow_html=True)
         if st.button("⬅️ กลับหน้าหลัก"):
@@ -268,33 +291,30 @@ elif selected_workspace == '🩺 B2B (คลินิก)':
     st.markdown("<div class='apple-hero'>Vet Portal</div>", unsafe_allow_html=True)
     st.markdown("<div class='apple-subhero'>พื้นที่ปฏิบัติงานและบริหารจัดการคลินิก</div>", unsafe_allow_html=True)
 
-    # NEW Feature: Clinic Economics Tracker (B2B)
     with st.container(border=True):
         st.markdown("<h3 style='font-size:20px; font-weight:700;'>📈 Clinic Economics Tracker</h3>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px;'>สรุปผลประกอบการและเคสส่งต่อจากแพลตฟอร์ม PetSOS</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px;'>สรุปผลประกอบการและเคสส่งต่อจากแพลตฟอร์ม</p>", unsafe_allow_html=True)
         
         c1, c2, c3 = st.columns(3)
-        c1.metric("เคสส่งต่อ (Referrals)", "42 เคส", "+12%")
-        c2.metric("รายได้จาก Telemed", "฿14,700", "+8%")
-        c3.metric("Conversion Rate", "68%", "ยอดเยี่ยม")
+        c1.metric("เคสส่งต่อ", "42 เคส", "+12%")
+        c2.metric("รายได้ Telemed", "฿14,700", "+8%")
+        c3.metric("ปิดการขาย", "68%", "เยี่ยม")
 
-    # NEW Feature: Live Triage Board (B2B)
     with st.container(border=True):
         st.markdown("<h3 style='font-size:20px; font-weight:700;'>📋 Live Triage Board</h3>", unsafe_allow_html=True)
         st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px;'>คิวคนไข้รอรับบริการ (เรียลไทม์)</p>", unsafe_allow_html=True)
         
         triage_data = pd.DataFrame({
             'คิว': ['#012', '#013', '#014'],
-            'ระดับ': ['🟧 สีส้ม (Urgent)', '🟨 สีเหลือง (Observe)', '🟨 สีเหลือง (Observe)'],
-            'อาการเบื้องต้น': ['อาเจียนต่อเนื่อง 4 ครั้ง', 'ซึม ไม่กินอาหาร 1 วัน', 'เกาหูสะบัดหัวรุนแรง'],
-            'รอคิว': ['04:12 นาที', '11:30 นาที', '14:05 นาที']
+            'ระดับ': ['🟧 สีส้ม', '🟨 สีเหลือง', '🟨 สีเหลือง'],
+            'อาการ': ['อาเจียนต่อเนื่อง', 'ซึม ไม่กินอาหาร', 'เกาหูสะบัดหัว'],
+            'รอคิว': ['04:12 น.', '11:30 น.', '14:05 น.']
         })
         st.table(triage_data)
 
-    # Original Vet Dashboard
     with st.container(border=True):
         st.markdown("<h3 style='font-size:20px; font-weight:700;'>สรุปข้อมูลผู้ป่วย (AI Summary)</h3>", unsafe_allow_html=True)
-        st.info("เคส #012: สุนัข สายพันธุ์โกลเด้น รีทรีฟเวอร์ (อายุ 5 ปี) - เสี่ยงภาวะ Gastritis")
+        st.info("เคส #012: คูเปอร์ (โกลเด้นฯ อายุ 5 ปี) - เสี่ยงภาวะ Gastritis")
         
         st.markdown("<p style='font-size:14px; font-weight:600; margin-bottom:4px;'>ยืนยันผลการวินิจฉัย</p>", unsafe_allow_html=True)
         vet_choice = st.selectbox("ยืนยันผลการวินิจฉัย", ["Gastritis", "Foreign Body Obstruction", "Parvovirus"], label_visibility="collapsed")
