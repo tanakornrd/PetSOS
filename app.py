@@ -4,12 +4,12 @@ import pandas as pd
 # --- 1. System Configuration ---
 st.set_page_config(page_title="PetSOS", page_icon="🐾", layout="centered")
 
-# --- 2. Advanced CSS Injection (Apple Store Clone) ---
-# เจาะจงแก้สไตล์การ์ดผ่าน Native Border ของ Streamlit เพื่อหลีกเลี่ยง TypeError
+# --- 2. Precision CSS Injection (Apple Store Clone & Bug Fixes) ---
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
         
+        /* Typography Standard */
         html, body, .stApp, .stMarkdown, p, span, h1, h2, h3, h4, label {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Prompt", sans-serif !important;
             color: #1D1D1F;
@@ -18,62 +18,70 @@ st.markdown("""
         .stApp { background-color: #F5F5F7 !important; }
         header, footer, #MainMenu { visibility: hidden !important; }
 
-        /* Apple Store Typography */
-        .apple-hero {
-            font-size: 48px;
+        /* --- Apple Store Top Navigation --- */
+        .apple-nav-title {
+            font-size: 42px;
             font-weight: 700;
             letter-spacing: -0.02em;
-            line-height: 1.1;
-            margin-bottom: 12px;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 5px;
         }
-        .apple-subhero {
-            font-size: 22px;
-            font-weight: 600;
+        .apple-nav-subtitle {
+            font-size: 18px;
+            font-weight: 500;
             color: #86868B;
-            line-height: 1.3;
-            margin-bottom: 25px;
+            text-align: center;
+            margin-bottom: 20px;
         }
-        .apple-link {
-            color: #007AFF;
-            font-size: 17px;
-            font-weight: 400;
-            text-decoration: none;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .apple-link:hover { text-decoration: underline; }
         
-        .section-header {
-            font-size: 24px;
-            font-weight: 600;
-            letter-spacing: -0.01em;
-            margin-top: 20px;
-            margin-bottom: 15px;
+        /* Styling the Radio button to look like a clean Apple Menu */
+        div.row-widget.stRadio > div {
+            background-color: #E8E8ED;
+            padding: 6px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
         }
-        .section-header span { color: #86868B; }
-
-        /* Apple Card Styling (Targeting Streamlit's native container border) */
+        
+        /* --- Card Architecture --- */
         div[data-testid="stVerticalBlockBorderWrapper"] {
             background-color: #FFFFFF !important;
-            border-radius: 22px !important;
+            border-radius: 20px !important;
             border: none !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04) !important;
-            padding: 5px !important;
-            transition: transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
+            padding: 10px !important;
             margin-bottom: 15px;
         }
-        div[data-testid="stVerticalBlockBorderWrapper"]:hover {
-            transform: scale(1.01);
-        }
 
-        /* Native Look Forms & Buttons */
+        /* --- Inputs & Text Fields --- */
         div[data-baseweb="select"] > div, div[data-baseweb="input"] > div {
             border-radius: 12px !important;
             border: 1px solid #D2D2D7 !important;
             background-color: #F5F5F7 !important;
         }
         
-        .stButton > button {
+        /* --- 🩹 CRITICAL BUG FIX: File Uploader --- */
+        div[data-testid="stFileUploader"] section {
+            border: 1px dashed #D2D2D7 !important;
+            background-color: #FAFAFA !important;
+            border-radius: 14px !important;
+            padding: 20px !important;
+        }
+        /* Lock the inner upload button so it doesn't stretch and overlap */
+        div[data-testid="stFileUploader"] button {
+            width: auto !important; 
+            border-radius: 8px !important;
+            border: 1px solid #D2D2D7 !important;
+            background-color: #FFFFFF !important;
+            color: #007AFF !important;
+            padding: 4px 14px !important;
+        }
+
+        /* --- Global Button Styling --- */
+        /* Target only standard stButtons, avoid breaking inner components */
+        div[data-testid="stButton"] > button {
             border-radius: 14px !important;
             font-weight: 500 !important;
             font-size: 15px !important;
@@ -82,106 +90,153 @@ st.markdown("""
             color: #007AFF !important;
             border: none !important;
             width: 100% !important;
+            transition: transform 0.1s ease;
         }
-        .stButton > button:hover { background-color: #E8E8ED !important; }
+        div[data-testid="stButton"] > button:hover { 
+            background-color: #E8E8ED !important; 
+            transform: scale(0.98);
+        }
         
-        button[kind="primary"] {
+        /* Primary Button Accent */
+        div[data-testid="stButton"] > button[kind="primary"] {
             background-color: #007AFF !important;
             color: white !important;
         }
-        button[kind="primary"]:hover { background-color: #0062CC !important; }
+        div[data-testid="stButton"] > button[kind="primary"]:hover { 
+            background-color: #0062CC !important; 
+        }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. Page Routing Logic (State Management) ---
+# --- 3. State Management (Routing & Navigation) ---
+if 'workspace' not in st.session_state:
+    st.session_state.workspace = '📱 ฝั่งผู้ใช้ (B2C)'
 if 'page' not in st.session_state:
     st.session_state.page = 'home'
 
 def navigate(page_name):
     st.session_state.page = page_name
 
-# ==========================================
-# PAGE 1: Home (Apple Store Layout)
-# ==========================================
-if st.session_state.page == 'home':
-    # Hero Section
-    st.markdown("<div class='apple-hero'>PetSOS</div>", unsafe_allow_html=True)
-    st.markdown("<div class='apple-subhero'>คือที่ที่ดีที่สุดในการดูแลรักษาสัตว์เลี้ยง<br>ที่คุณรัก</div>", unsafe_allow_html=True)
-    
-    st.markdown("<a href='#' class='apple-link'>สอบถามกับ Specialist ↗</a>", unsafe_allow_html=True)
-    st.markdown("<a href='#' class='apple-link'>ค้นหาโรงพยาบาลสัตว์ 24 ชม. ↗</a>", unsafe_allow_html=True)
-    
-    st.write("<br>", unsafe_allow_html=True)
-    st.markdown("<div class='section-header'>บริการของเรา <span>เลือกความช่วยเหลือที่คุณต้องการ</span></div>", unsafe_allow_html=True)
+# --- 4. Top Navigation Bar (Apple Store Style) ---
+st.markdown("<div class='apple-nav-title'>PetSOS</div>", unsafe_allow_html=True)
+st.markdown("<div class='apple-nav-subtitle'>ระบบนิเวศแพลตฟอร์มการแพทย์สำหรับสัตว์เลี้ยง</div>", unsafe_allow_html=True)
 
-    # Card 1: SOS (Code Red)
-    with st.container(border=True):
-        st.markdown("<h3 style='margin-bottom:0px; font-size:20px;'>🚨 กรณีฉุกเฉินวิกฤต</h3>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px;'>หากสัตว์เลี้ยงหมดสติ ชัก หรือหยุดหายใจ</p>", unsafe_allow_html=True)
-        # Custom inline style for SOS button logic
-        st.markdown("""<style>div:nth-child(1) > div > div > button { background-color: #FF3B30 !important; color: white !important; }</style>""", unsafe_allow_html=True)
-        if st.button("🔴 ขอความช่วยเหลือด่วน (SOS)"):
-            navigate('sos')
+selected_workspace = st.radio(
+    "เลือกหน้าต่างการประเมิน:",
+    ['📱 ฝั่งผู้ใช้ (B2C)', '🩺 สัตวแพทย์ (B2B)', '🌐 หลังบ้าน (Backend)'],
+    horizontal=True,
+    label_visibility="collapsed"
+)
+st.write("<br>", unsafe_allow_html=True)
+
+# ==========================================
+# WORKSPACE 1: B2C App (Pet Parents)
+# ==========================================
+if selected_workspace == '📱 ฝั่งผู้ใช้ (B2C)':
+    
+    # ---------------- PAGE: HOME ----------------
+    if st.session_state.page == 'home':
+        st.markdown("<h3 style='font-size:24px; font-weight:700; text-align:center;'>บริการของเรา</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#86868B; text-align:center; margin-bottom:20px;'>เลือกความช่วยเหลือที่คุณต้องการในขณะนี้</p>", unsafe_allow_html=True)
+
+        # Feature: Code Red
+        with st.container(border=True):
+            st.markdown("<h3 style='margin-bottom:0px; font-size:20px;'>🚨 กรณีฉุกเฉินวิกฤต</h3>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px;'>หากสัตว์เลี้ยงหมดสติ ชัก หรือหยุดหายใจ</p>", unsafe_allow_html=True)
+            # Custom style injection specifically for SOS Button
+            st.markdown("""<style>div:nth-child(1) > div > div > button { background-color: #FF3B30 !important; color: white !important; font-weight:600 !important;}</style>""", unsafe_allow_html=True)
+            if st.button("🔴 ขอความช่วยเหลือด่วน (SOS)"):
+                navigate('sos')
+                st.rerun()
+
+        # Feature: Triage Engine
+        with st.container(border=True):
+            st.markdown("<h3 style='margin-bottom:0px; font-size:20px;'>🩺 ประเมินอาการเบื้องต้น</h3>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px;'>ให้ AI ช่วยคัดกรองความเร่งด่วนทางการแพทย์</p>", unsafe_allow_html=True)
+            
+            st.markdown("<p style='font-size:13px; font-weight:600; margin-bottom:4px;'>ชนิดสัตว์เลี้ยง</p>", unsafe_allow_html=True)
+            species = st.selectbox("ชนิดสัตว์เลี้ยง", ["สุนัข", "แมว", "สัตว์แปลก (Exotic)"], label_visibility="collapsed")
+            
+            st.markdown("<p style='font-size:13px; font-weight:600; margin-bottom:4px; margin-top:10px;'>อาการที่พบ</p>", unsafe_allow_html=True)
+            user_input = st.text_input("อาการที่พบ", placeholder="เช่น ซึม อาเจียน หรือ ไม่กินอาหาร", label_visibility="collapsed")
+            
+            st.markdown("<p style='font-size:13px; font-weight:600; margin-bottom:4px; margin-top:10px;'>แนบรูปภาพ/วิดีโอ (ถ้ามี)</p>", unsafe_allow_html=True)
+            st.file_uploader("แนบไฟล์", type=['png','jpg','mp4'], label_visibility="collapsed")
+            
+            st.write("")
+            if st.button("ส่งข้อมูลให้ AI ประเมินผล ➡️", type="primary"):
+                navigate('result')
+                st.rerun()
+
+    # ---------------- PAGE: SOS (Code Red) ----------------
+    elif st.session_state.page == 'sos':
+        st.markdown("<h2 style='font-size:32px; font-weight:700; color:#FF3B30; text-align:center;'>Code Red</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#86868B; text-align:center; margin-bottom:20px;'>ระบบนำทางฉุกเฉินไปยังโรงพยาบาลที่ใกล้ที่สุด</p>", unsafe_allow_html=True)
+        
+        with st.container(border=True):
+            st.markdown("<h3 style='font-size:18px;'>📍 โรงพยาบาลสัตว์จุฬาลงกรณ์</h3>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#86868B; font-size:14px;'>ห่างจากตำแหน่งของคุณ 2.4 กม.</p>", unsafe_allow_html=True)
+            
+            map_data = pd.DataFrame({'lat': [13.7367], 'lon': [100.5331]})
+            st.map(map_data)
+            
+            st.markdown("""<style>div[data-testid="stButton"] button { background-color: #FF3B30 !important; color: white !important; font-weight: bold !important; }</style>""", unsafe_allow_html=True)
+            st.button("📞 โทรสายด่วนทันที")
+            
+        st.write("<br>", unsafe_allow_html=True)
+        if st.button("⬅️ ย้อนกลับ"):
+            navigate('home')
             st.rerun()
 
-    # Card 2: AI Triage Engine
-    with st.container(border=True):
-        st.markdown("<h3 style='margin-bottom:0px; font-size:20px;'>🩺 ประเมินอาการเบื้องต้น</h3>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px;'>ให้ AI ช่วยคัดกรองความเร่งด่วนทางการแพทย์</p>", unsafe_allow_html=True)
+    # ---------------- PAGE: RESULT ----------------
+    elif st.session_state.page == 'result':
+        st.markdown("<h2 style='font-size:32px; font-weight:700; text-align:center;'>ผลการประเมิน</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#86868B; text-align:center; margin-bottom:20px;'>คำแนะนำทางการแพทย์โดย AI Triage</p>", unsafe_allow_html=True)
         
-        species = st.selectbox("ชนิดสัตว์เลี้ยง", ["สุนัข", "แมว", "สัตว์แปลก (Exotic)"])
-        user_input = st.text_input("อาการที่พบ", placeholder="เช่น ซึม อาเจียน หรือ ไม่กินอาหาร")
-        st.file_uploader("แนบรูปภาพ/วิดีโอ (ถ้ามี)", type=['png','jpg','mp4'])
-        
-        if st.button("ส่งข้อมูลให้ AI ประเมินผล ➡️", type="primary"):
-            navigate('result')
+        with st.container(border=True):
+            st.markdown("<h3 style='font-size:20px; color:#F59E0B;'>🟡 ระดับสีเหลือง (Observe)</h3>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#424245; font-size:15px; margin-bottom:15px;'>อาการพ้นขีดอันตรายเฉียบพลัน แนะนำให้สังเกตอาการ หรือปรึกษาสัตวแพทย์ทางไกล</p>", unsafe_allow_html=True)
+            st.button("🎥 เข้าห้องสนทนากับแพทย์ (รอคิว 12 นาที)", type="primary")
+            
+        st.markdown("<h3 style='font-size:20px; font-weight:600; margin-top:20px;'>ตัวเลือกเพิ่มเติม</h3>", unsafe_allow_html=True)
+        with st.container(border=True):
+            col1, col2 = st.columns(2)
+            with col1:
+                st.markdown("<p style='font-weight:600; font-size:14px; margin-bottom:0;'>ปรึกษารายครั้ง</p>", unsafe_allow_html=True)
+                st.button("ชำระ 350฿")
+            with col2:
+                st.markdown("<p style='font-weight:600; font-size:14px; margin-bottom:0;'>สมัคร Premium</p>", unsafe_allow_html=True)
+                st.button("รายเดือน 299฿", type="primary")
+
+        st.write("<br>", unsafe_allow_html=True)
+        if st.button("⬅️ กลับหน้าหลัก"):
+            navigate('home')
             st.rerun()
 
-# ==========================================
-# PAGE 2: Code Red (Emergency)
-# ==========================================
-elif st.session_state.page == 'sos':
-    st.markdown("<div class='apple-hero' style='color:#FF3B30;'>Code Red</div>", unsafe_allow_html=True)
-    st.markdown("<div class='apple-subhero'>ระบบนำทางฉุกเฉินไปยังโรงพยาบาล<br>ที่ใกล้ที่สุด</div>", unsafe_allow_html=True)
-    
-    with st.container(border=True):
-        st.markdown("<h3 style='font-size:18px;'>📍 โรงพยาบาลสัตว์จุฬาลงกรณ์</h3>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#86868B; font-size:14px;'>ห่างจากตำแหน่งของคุณ 2.4 กม.</p>", unsafe_allow_html=True)
-        
-        map_data = pd.DataFrame({'lat': [13.7367], 'lon': [100.5331]})
-        st.map(map_data)
-        
-        st.markdown("""<style>div[data-testid="stButton"] button { background-color: #FF3B30 !important; color: white !important; font-weight: bold !important; }</style>""", unsafe_allow_html=True)
-        st.button("📞 โทรสายด่วนทันที")
-        
-    st.write("<br>", unsafe_allow_html=True)
-    if st.button("⬅️ ยกเลิกและกลับหน้าหลัก"):
-        navigate('home')
-        st.rerun()
 
 # ==========================================
-# PAGE 3: Result & Telemed
+# WORKSPACE 2: B2B Portal (Veterinary)
 # ==========================================
-elif st.session_state.page == 'result':
-    st.markdown("<div class='apple-hero'>ผลการประเมิน</div>", unsafe_allow_html=True)
-    st.markdown("<div class='apple-subhero'>คำแนะนำทางการแพทย์โดย AI Triage</div>", unsafe_allow_html=True)
-    
-    with st.container(border=True):
-        st.markdown("<h3 style='font-size:20px; color:#F59E0B;'>🟡 ระดับสีเหลือง (Observe)</h3>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#424245; font-size:15px; margin-bottom:15px;'>อาการพ้นขีดอันตรายเฉียบพลัน แนะนำให้สังเกตอาการ หรือปรึกษาสัตวแพทย์ทางไกล</p>", unsafe_allow_html=True)
-        st.button("🎥 เข้าห้องสนทนากับแพทย์ (รอคิว 12 นาที)", type="primary")
-        
-    st.markdown("<div class='section-header'>ตัวเลือกเพิ่มเติม</div>", unsafe_allow_html=True)
-    with st.container(border=True):
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown("<p style='font-weight:600; font-size:14px; margin-bottom:0;'>ปรึกษารายครั้ง</p>", unsafe_allow_html=True)
-            st.button("ชำระ 350฿")
-        with col2:
-            st.markdown("<p style='font-weight:600; font-size:14px; margin-bottom:0;'>สมัคร Premium</p>", unsafe_allow_html=True)
-            st.button("รายเดือน 299฿", type="primary")
+elif selected_workspace == '🩺 สัตวแพทย์ (B2B)':
+    st.markdown("<h3 style='font-size:24px; font-weight:700; text-align:center;'>Vet Dashboard</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#86868B; text-align:center; margin-bottom:20px;'>พื้นที่ปฏิบัติงานสัตวแพทย์</p>", unsafe_allow_html=True)
 
-    st.write("<br>", unsafe_allow_html=True)
-    if st.button("⬅️ กลับหน้าหลัก"):
-        navigate('home')
-        st.rerun()
+    with st.container(border=True):
+        st.markdown("<h3 style='font-size:18px;'>ข้อมูลผู้ป่วย (AI Summary)</h3>", unsafe_allow_html=True)
+        st.info("สุนัข สายพันธุ์โกลเด้น รีทรีฟเวอร์ (อายุ 5 ปี) - เสี่ยงภาวะ Gastritis")
+        
+        vet_choice = st.selectbox("ยืนยันผลการวินิจฉัยเพื่อบันทึก Medical Data", ["Gastritis", "Foreign Body Obstruction", "Parvovirus"])
+        if st.button("อนุมัติรับรองข้อมูล (Sign-Off)", type="primary"):
+            st.success("บันทึกข้อมูลสำเร็จ")
+
+# ==========================================
+# WORKSPACE 3: Backend
+# ==========================================
+elif selected_workspace == '🌐 หลังบ้าน (Backend)':
+    st.markdown("<h3 style='font-size:24px; font-weight:700; text-align:center;'>Infrastructure</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#86868B; text-align:center; margin-bottom:20px;'>การเชื่อมต่อ API และ Hardware</p>", unsafe_allow_html=True)
+
+    with st.container(border=True):
+        st.markdown("<h3 style='font-size:18px;'>Insurance API Gateway</h3>", unsafe_allow_html=True)
+        api_table = pd.DataFrame({'พันธมิตรประกันภัย': ['AIA Pet Protect', 'BKI'], 'สถานะ': ['Connected', 'Testing']})
+        st.table(api_table)
