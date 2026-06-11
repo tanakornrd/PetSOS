@@ -4,7 +4,7 @@ import pandas as pd
 # --- 1. System Configuration ---
 st.set_page_config(page_title="PetSOS", page_icon="🐾", layout="centered")
 
-# --- 2. Apple Store Exact CSS Architecture ---
+# --- 2. Apple Store Exact CSS Architecture + Ultimate Uploader Fix ---
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
@@ -17,7 +17,7 @@ st.markdown("""
         .stApp { background-color: #F5F5F7 !important; }
         header, footer, #MainMenu { visibility: hidden !important; }
 
-        /* 2. Apple Store Hero Headings (อิงจากภาพอ้างอิง) */
+        /* 2. Apple Store Hero Headings */
         .apple-hero {
             font-size: 46px;
             font-weight: 700;
@@ -35,14 +35,13 @@ st.markdown("""
             letter-spacing: -0.5px;
         }
 
-        /* 3. Segmented Control (ทำแถบด้านบนให้เหมือน Apple iOS Menu) */
+        /* 3. Segmented Control (Top Nav) */
         div[data-testid="stRadio"] > div {
             background-color: #E8E8ED !important;
             padding: 4px !important;
             border-radius: 12px !important;
             gap: 4px !important;
         }
-        /* ซ่อนวงกลม Radio ออกเพื่อให้ดูเป็นปุ่มกด */
         div[data-testid="stRadio"] div[role="radio"] div:first-child {
             display: none !important;
         }
@@ -80,13 +79,20 @@ st.markdown("""
             background-color: #F5F5F7 !important;
         }
         
-        /* --- 🩹 SURGICAL FIX: File Uploader (แก้บั๊กฟอนต์ซ้อน) --- */
-        /* แต่งเฉพาะกรอบนอก ไม่แตะปุ่มข้างในเด็ดขาด */
+        /* --- 🩹 ULTIMATE FIX: File Uploader Lock --- */
         div[data-testid="stFileUploader"] section {
             border: 1px dashed #D2D2D7 !important;
             background-color: #F5F5F7 !important;
             border-radius: 12px !important;
             padding: 15px !important;
+        }
+        /* บังคับปุ่มอัปโหลดไม่ให้พับบรรทัดและบังคับความกว้างตามตัวอักษรเพื่อกันฟอนต์ซ้อน */
+        div[data-testid="stFileUploader"] button {
+            white-space: nowrap !important;
+            width: max-content !important;
+            min-width: 100px !important;
+            margin: 0 auto !important;
+            border-radius: 8px !important;
         }
 
         /* 6. Standard Apple Buttons */
@@ -120,7 +126,6 @@ def navigate(page_name):
     st.session_state.page = page_name
 
 # --- 4. TOP NAVIGATION (Segmented Control) ---
-# แถบเลือกสลับหน้าต่างที่ออกแบบใหม่ให้เป็นปุ่มแคปซูลสไตล์ Apple
 selected_workspace = st.radio(
     "Select Workspace:",
     ['📱 B2C (ผู้ใช้)', '🩺 B2B (คลินิก)', '🌐 Backend'],
