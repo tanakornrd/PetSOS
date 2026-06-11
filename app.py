@@ -1,178 +1,187 @@
 import streamlit as st
 import pandas as pd
 
-# --- 1. System Configuration & Clean Canvas Base ---
-st.set_page_config(layout="centered")
+# --- 1. System Configuration ---
+st.set_page_config(page_title="PetSOS", page_icon="🐾", layout="centered")
 
-# Surgical CSS Injection for Apple Aesthetic
+# --- 2. Advanced CSS Injection (Apple Store Clone) ---
+# เจาะจงแก้สไตล์การ์ดผ่าน Native Border ของ Streamlit เพื่อหลีกเลี่ยง TypeError
 st.markdown("""
     <style>
-        /* Typography: Apple Standard Font (SF Pro-like) */
-        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
-        html, body, .stApp, .stMarkdown, p, span, h1, h2, h3, h4, h5, h6 {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Prompt", sans-serif !important;
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+        
+        html, body, .stApp, .stMarkdown, p, span, h1, h2, h3, h4, label {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Prompt", sans-serif !important;
             color: #1D1D1F;
         }
+        
+        .stApp { background-color: #F5F5F7 !important; }
+        header, footer, #MainMenu { visibility: hidden !important; }
 
-        /* Platform Base: Apple Canvas Background */
-        .stApp {
+        /* Apple Store Typography */
+        .apple-hero {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 12px;
+        }
+        .apple-subhero {
+            font-size: 22px;
+            font-weight: 600;
+            color: #86868B;
+            line-height: 1.3;
+            margin-bottom: 25px;
+        }
+        .apple-link {
+            color: #007AFF;
+            font-size: 17px;
+            font-weight: 400;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .apple-link:hover { text-decoration: underline; }
+        
+        .section-header {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        .section-header span { color: #86868B; }
+
+        /* Apple Card Styling (Targeting Streamlit's native container border) */
+        div[data-testid="stVerticalBlockBorderWrapper"] {
+            background-color: #FFFFFF !important;
+            border-radius: 22px !important;
+            border: none !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04) !important;
+            padding: 5px !important;
+            transition: transform 0.2s ease;
+            margin-bottom: 15px;
+        }
+        div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+            transform: scale(1.01);
+        }
+
+        /* Native Look Forms & Buttons */
+        div[data-baseweb="select"] > div, div[data-baseweb="input"] > div {
+            border-radius: 12px !important;
+            border: 1px solid #D2D2D7 !important;
             background-color: #F5F5F7 !important;
         }
-
-        /* 🖼️ Card-based Layout: Defining Container Styles */
-        .apple-card {
-            background-color: #FFFFFF;
-            border-radius: 20px;
-            border: 1px solid #E8E8ED;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        /* Defining Upload Area as an " Institutional Card " */
-        .apple-upload-card {
-            background-color: #FFFFFF;
-            border-radius: 16px;
-            border: 2px dashed #D2D2D7;
-            padding: 20px;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        /* 📝 Typography Classes for Premium Look */
-        .apple-hero-title {
-            font-size: 40px;
-            font-weight: 700;
-            letter-spacing: -1px;
-            text-align: left;
-            margin-bottom: 5px;
-        }
-        .apple-hero-subtitle {
-            font-size: 18px;
-            font-weight: 400;
-            color: #86868B;
-            text-align: left;
-            margin-bottom: 40px;
-        }
-        .apple-section-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #1D1D1F;
-            margin-bottom: 15px;
-            letter-spacing: -0.2px;
-        }
-        .apple-field-label {
-            font-size: 14px;
-            font-weight: 600;
-            color: #1D1D1F;
-            margin-bottom: 6px;
-        }
-        .apple-placeholder-label {
-            color: #86868B;
-        }
-
-        /* 🔘 Native Look Buttons & Elements */
-        /* Formatting the dropdown */
-        .stSelectbox > div > div > div {
-            border-radius: 12px;
-            border: 1px solid #D2D2D7;
-            padding: 12px;
-            background-color: #F5F5F7;
-        }
-
-        /* Formatting the text input */
-        .stTextInput > div > div > input {
-            border-radius: 12px;
-            border: 1px solid #D2D2D7;
-            padding: 12px;
-        }
-
-        /* Formatting General Buttons */
+        
         .stButton > button {
-            border-radius: 12px;
-            font-weight: 500;
-            padding: 12px 24px;
-            transition: all 0.15s ease-in-out;
-            width: 100%;
-        }
-        .stButton > button:hover {
-            transform: translateY(-1px);
-        }
-
-        /* Institutional Style formatting for SOS Button */
-        .sos-button > button {
-            background-color: #FF3B30 !important;
-            color: white !important;
+            border-radius: 14px !important;
+            font-weight: 500 !important;
+            font-size: 15px !important;
+            padding: 12px 24px !important;
+            background-color: #F5F5F7 !important;
+            color: #007AFF !important;
             border: none !important;
-            font-weight: 700 !important;
+            width: 100% !important;
         }
-        .sos-button > button:hover {
-            background-color: #E03126 !important;
-        }
-
-        /* Apple UI primary accent formatting for Action Button */
-        .action-button > button {
+        .stButton > button:hover { background-color: #E8E8ED !important; }
+        
+        button[kind="primary"] {
             background-color: #007AFF !important;
             color: white !important;
-            border: none !important;
-            font-weight: 600 !important;
         }
-        .action-button > button:hover {
-            background-color: #0062CC !important;
-        }
-
-        /* Formatting file uploader area */
-        .stFileUploader section > button {
-            background-color: #007AFF;
-            color: white;
-            border-radius: 12px;
-        }
-
-        /* Hide unnecessary system elements for clean Institutional Look */
-        header {visibility: hidden;}
-        footer {visibility: hidden;}
+        button[kind="primary"]:hover { background-color: #0062CC !important; }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 2. Identity Area ---
-# Creating the hero title structure inspired by apple.com
-st.markdown("<h1 class='apple-hero-title'>PetSOS</h1>", unsafe_allow_html=True)
-st.markdown("<p class='apple-hero-subtitle'>Medical Decision Support & Triage Platform</p>", unsafe_allow_html=True)
+# --- 3. Page Routing Logic (State Management) ---
+if 'page' not in st.session_state:
+    st.session_state.page = 'home'
 
-# --- 3. Feature 1: One-Tap SOS Card ---
-# Formatting it as a distinct premium card
-with st.container(css_classes=["apple-card", "sos-button"]):
-    st.markdown("<h2 class='apple-section-title'>Feature 1 • One-Tap SOS</h2>", unsafe_allow_html=True)
+def navigate(page_name):
+    st.session_state.page = page_name
+
+# ==========================================
+# PAGE 1: Home (Apple Store Layout)
+# ==========================================
+if st.session_state.page == 'home':
+    # Hero Section
+    st.markdown("<div class='apple-hero'>PetSOS</div>", unsafe_allow_html=True)
+    st.markdown("<div class='apple-subhero'>คือที่ที่ดีที่สุดในการดูแลรักษาสัตว์เลี้ยง<br>ที่คุณรัก</div>", unsafe_allow_html=True)
     
-    # Keeping the original functionality of the SOS button
-    if st.button("🔴 ONE-TAP SOS ขอความช่วยเหลือด่วน"):
-        st.error("🆘 SOS ACTIVATED - Emergency support is on the way.")
-
-# --- 4. Feature 2: AI Triage Engine Card ---
-# Formatting as a larger distinct premium card
-with st.container(css_classes=["apple-card"]):
-    st.markdown("<h2 class='apple-section-title'>Feature 2 • AI Triage Engine</h2>", unsafe_allow_html=True)
-
-    # 📝 Input Fields with native Apple look formatting
-    st.markdown("<p class='apple-field-label'>ชนิดสัตว์เลี้ยงของคุณ</p>", unsafe_allow_html=True)
-    st.selectbox("Select Pet Type", ["สุนัข", "แมว", "สัตว์แปลก (Exotic)"], label_visibility="collapsed")
+    st.markdown("<a href='#' class='apple-link'>สอบถามกับ Specialist ↗</a>", unsafe_allow_html=True)
+    st.markdown("<a href='#' class='apple-link'>ค้นหาโรงพยาบาลสัตว์ 24 ชม. ↗</a>", unsafe_allow_html=True)
     
-    st.markdown("<p class='apple-field-label'>ระบุอาการของสัตว์เลี้ยงอย่างกระชับ:</p>", unsafe_allow_html=True)
-    st.text_input("Enter Pet Symptom", placeholder="เช่น สุนัขมีอาการชักและหมดสติ หรือ ซึมไม่กินอาหาร", label_visibility="collapsed")
+    st.write("<br>", unsafe_allow_html=True)
+    st.markdown("<div class='section-header'>บริการของเรา <span>เลือกความช่วยเหลือที่คุณต้องการ</span></div>", unsafe_allow_html=True)
 
-    # 📷 Institutional Style formatting for Upload Area Card
-    st.markdown("<p class='apple-field-label'>📷 แนบรูปภาพหรือวิดีโออาการสั้นเพื่อเพิ่มความแม่นยำ (Optional)</p>", unsafe_allow_html=True)
-    with st.container(css_classes=["apple-upload-card"]):
-        # Header text inside the card
-        st.markdown("<p style='font-size: 14px; font-weight: 500; text-align: center;'>Upload (Optional)</p>", unsafe_allow_html=True)
-        # Detailed instruction text inside the card
-        st.markdown("<p style='font-size: 12px; color: #86868B; text-align: center;'>200MB per file • PNG, JPG, MP4</p>", unsafe_allow_html=True)
-        # Original file uploader function, collapses its own label to let the Card Header take precedence
-        st.file_uploader("Select symptom file", label_visibility="collapsed")
+    # Card 1: SOS (Code Red)
+    with st.container(border=True):
+        st.markdown("<h3 style='margin-bottom:0px; font-size:20px;'>🚨 กรณีฉุกเฉินวิกฤต</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px;'>หากสัตว์เลี้ยงหมดสติ ชัก หรือหยุดหายใจ</p>", unsafe_allow_html=True)
+        # Custom inline style for SOS button logic
+        st.markdown("""<style>div:nth-child(1) > div > div > button { background-color: #FF3B30 !important; color: white !important; }</style>""", unsafe_allow_html=True)
+        if st.button("🔴 ขอความช่วยเหลือด่วน (SOS)"):
+            navigate('sos')
+            st.rerun()
 
-# --- 5. Action Button ---
-# Primary action button with Apple blue styling
-st.markdown("<div class='action-button'>", unsafe_allow_html=True)
-if st.button("ส่งข้อมูลให้ AI ประเมินผล ➡️", type="primary"):
-    st.success("🤖 Information submitted. AI is processing the triage.")
-st.markdown("</div>", unsafe_allow_html=True)
+    # Card 2: AI Triage Engine
+    with st.container(border=True):
+        st.markdown("<h3 style='margin-bottom:0px; font-size:20px;'>🩺 ประเมินอาการเบื้องต้น</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px;'>ให้ AI ช่วยคัดกรองความเร่งด่วนทางการแพทย์</p>", unsafe_allow_html=True)
+        
+        species = st.selectbox("ชนิดสัตว์เลี้ยง", ["สุนัข", "แมว", "สัตว์แปลก (Exotic)"])
+        user_input = st.text_input("อาการที่พบ", placeholder="เช่น ซึม อาเจียน หรือ ไม่กินอาหาร")
+        st.file_uploader("แนบรูปภาพ/วิดีโอ (ถ้ามี)", type=['png','jpg','mp4'])
+        
+        if st.button("ส่งข้อมูลให้ AI ประเมินผล ➡️", type="primary"):
+            navigate('result')
+            st.rerun()
+
+# ==========================================
+# PAGE 2: Code Red (Emergency)
+# ==========================================
+elif st.session_state.page == 'sos':
+    st.markdown("<div class='apple-hero' style='color:#FF3B30;'>Code Red</div>", unsafe_allow_html=True)
+    st.markdown("<div class='apple-subhero'>ระบบนำทางฉุกเฉินไปยังโรงพยาบาล<br>ที่ใกล้ที่สุด</div>", unsafe_allow_html=True)
+    
+    with st.container(border=True):
+        st.markdown("<h3 style='font-size:18px;'>📍 โรงพยาบาลสัตว์จุฬาลงกรณ์</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#86868B; font-size:14px;'>ห่างจากตำแหน่งของคุณ 2.4 กม.</p>", unsafe_allow_html=True)
+        
+        map_data = pd.DataFrame({'lat': [13.7367], 'lon': [100.5331]})
+        st.map(map_data)
+        
+        st.markdown("""<style>div[data-testid="stButton"] button { background-color: #FF3B30 !important; color: white !important; font-weight: bold !important; }</style>""", unsafe_allow_html=True)
+        st.button("📞 โทรสายด่วนทันที")
+        
+    st.write("<br>", unsafe_allow_html=True)
+    if st.button("⬅️ ยกเลิกและกลับหน้าหลัก"):
+        navigate('home')
+        st.rerun()
+
+# ==========================================
+# PAGE 3: Result & Telemed
+# ==========================================
+elif st.session_state.page == 'result':
+    st.markdown("<div class='apple-hero'>ผลการประเมิน</div>", unsafe_allow_html=True)
+    st.markdown("<div class='apple-subhero'>คำแนะนำทางการแพทย์โดย AI Triage</div>", unsafe_allow_html=True)
+    
+    with st.container(border=True):
+        st.markdown("<h3 style='font-size:20px; color:#F59E0B;'>🟡 ระดับสีเหลือง (Observe)</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#424245; font-size:15px; margin-bottom:15px;'>อาการพ้นขีดอันตรายเฉียบพลัน แนะนำให้สังเกตอาการ หรือปรึกษาสัตวแพทย์ทางไกล</p>", unsafe_allow_html=True)
+        st.button("🎥 เข้าห้องสนทนากับแพทย์ (รอคิว 12 นาที)", type="primary")
+        
+    st.markdown("<div class='section-header'>ตัวเลือกเพิ่มเติม</div>", unsafe_allow_html=True)
+    with st.container(border=True):
+        col1, col2 = st.columns(2)
+        with col1:
+            st.markdown("<p style='font-weight:600; font-size:14px; margin-bottom:0;'>ปรึกษารายครั้ง</p>", unsafe_allow_html=True)
+            st.button("ชำระ 350฿")
+        with col2:
+            st.markdown("<p style='font-weight:600; font-size:14px; margin-bottom:0;'>สมัคร Premium</p>", unsafe_allow_html=True)
+            st.button("รายเดือน 299฿", type="primary")
+
+    st.write("<br>", unsafe_allow_html=True)
+    if st.button("⬅️ กลับหน้าหลัก"):
+        navigate('home')
+        st.rerun()
