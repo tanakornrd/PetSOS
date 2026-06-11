@@ -5,12 +5,12 @@ import numpy as np
 # --- 1. System Configuration ---
 st.set_page_config(page_title="PetSOS", page_icon="🐾", layout="centered")
 
-# --- 2. Apple Store Exact CSS Architecture ---
+# --- 2. Apple Store Exact CSS Architecture + Ultimate Uploader Fix ---
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
         
-        /* Global Typography & Background */
+        /* 1. Global Typography & Background */
         html, body, .stApp, .stMarkdown, p, span, h1, h2, h3, h4, label {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Prompt", sans-serif !important;
             color: #1D1D1F;
@@ -18,7 +18,7 @@ st.markdown("""
         .stApp { background-color: #F5F5F7 !important; }
         header, footer, #MainMenu { visibility: hidden !important; }
 
-        /* Apple Store Hero Headings */
+        /* 2. Apple Store Hero Headings */
         .apple-hero {
             font-size: 46px;
             font-weight: 700;
@@ -36,7 +36,7 @@ st.markdown("""
             letter-spacing: -0.5px;
         }
 
-        /* Segmented Control (Top Nav) */
+        /* 3. Segmented Control (Top Nav) */
         div[data-testid="stRadio"] > div {
             background-color: #E8E8ED !important;
             padding: 4px !important;
@@ -61,7 +61,7 @@ st.markdown("""
             color: #1D1D1F !important;
         }
 
-        /* White Card Containers */
+        /* 4. White Card Containers */
         div[data-testid="stVerticalBlockBorderWrapper"] {
             background-color: #FFFFFF !important;
             border-radius: 18px !important;
@@ -71,14 +71,14 @@ st.markdown("""
             margin-bottom: 20px !important;
         }
 
-        /* Inputs & Dropdowns */
+        /* 5. Inputs & Dropdowns */
         div[data-baseweb="select"] > div, div[data-baseweb="input"] > div {
             border-radius: 12px !important;
             border: 1px solid #D2D2D7 !important;
             background-color: #F5F5F7 !important;
         }
         
-        /* File Uploader Lock */
+        /* --- 🩹 ULTIMATE FIX: File Uploader Lock --- */
         div[data-testid="stFileUploader"] section {
             border: 1px dashed #D2D2D7 !important;
             background-color: #F5F5F7 !important;
@@ -93,7 +93,7 @@ st.markdown("""
             border-radius: 8px !important;
         }
 
-        /* Standard Apple Buttons */
+        /* 6. Standard Apple Buttons */
         div[data-testid="stButton"] > button {
             border-radius: 12px !important;
             font-weight: 500 !important;
@@ -153,7 +153,7 @@ if selected_workspace == '📱 B2C (ผู้ใช้)':
         st.markdown("<div class='apple-hero'>PetSOS</div>", unsafe_allow_html=True)
         st.markdown("<div class='apple-subhero'>ดูแลสัตว์เลี้ยงที่คุณรัก<br>ด้วยข้อมูลและผู้เชี่ยวชาญ</div>", unsafe_allow_html=True)
         
-        # --- NEW Feature: Pet Basic Profile (Dashboard หน้าแรก) ---
+        # --- Feature: Pet Basic Profile (Dashboard หน้าแรก) ---
         with st.container(border=True):
             st.markdown("<h3 style='margin-bottom:0px; font-size:22px; font-weight:700;'>🐶 ข้อมูลของน้องคูเปอร์ (Cooper)</h3>", unsafe_allow_html=True)
             st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px; font-weight:500;'>ข้อมูลพื้นฐานและสถานะสุขภาพวันนี้</p>", unsafe_allow_html=True)
@@ -173,7 +173,7 @@ if selected_workspace == '📱 B2C (ผู้ใช้)':
         st.markdown("<h3 style='font-size:22px; font-weight:700; text-align:center;'>บริการความช่วยเหลือ</h3>", unsafe_allow_html=True)
         st.markdown("<p style='color:#86868B; font-size:14px; text-align:center; margin-bottom:20px;'>เลือกเครื่องมือตามระดับความฉุกเฉิน</p>", unsafe_allow_html=True)
 
-        # Feature: Code Red
+        # --- Feature: Code Red ---
         with st.container(border=True):
             st.markdown("<h3 style='margin-bottom:0px; font-size:20px; font-weight:700;'>🚨 กรณีฉุกเฉินวิกฤต</h3>", unsafe_allow_html=True)
             st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px; font-weight:500;'>หมดสติ ชัก หรือหยุดหายใจ</p>", unsafe_allow_html=True)
@@ -182,17 +182,35 @@ if selected_workspace == '📱 B2C (ผู้ใช้)':
                 navigate('sos')
                 st.rerun()
 
-        # Feature: Triage Engine
+        # --- Feature: Triage Engine (Speed-Optimized) ---
         with st.container(border=True):
             st.markdown("<h3 style='margin-bottom:0px; font-size:20px; font-weight:700;'>🩺 ประเมินอาการเบื้องต้น</h3>", unsafe_allow_html=True)
-            st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px; font-weight:500;'>ให้ AI ช่วยคัดกรองความเร่งด่วน</p>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px; font-weight:500;'>แตะเพื่อประเมินผลทันที หรือพิมพ์อาการด้านล่าง</p>", unsafe_allow_html=True)
             
-            st.markdown("<p style='font-size:14px; font-weight:600; margin-bottom:4px;'>ชนิดสัตว์เลี้ยง</p>", unsafe_allow_html=True)
-            # Default to dog since profile says Cooper is a Golden
-            species = st.selectbox("ชนิดสัตว์เลี้ยง", ["สุนัข", "แมว", "สัตว์แปลก (Exotic)"], index=0, label_visibility="collapsed")
+            # --- กลยุทธ์ One-Tap Symptom Chips ---
+            st.markdown("<p style='font-size:14px; font-weight:600; margin-bottom:8px;'>อาการที่พบบ่อย (Quick Select)</p>", unsafe_allow_html=True)
+            q1, q2 = st.columns(2)
+            if q1.button("🤮 อาเจียน / ท้องเสีย", use_container_width=True):
+                navigate('result')
+                st.rerun()
+            if q2.button("🤒 ซึม / ไม่กินอาหาร", use_container_width=True):
+                navigate('result')
+                st.rerun()
             
-            st.markdown("<p style='font-size:14px; font-weight:600; margin-bottom:4px; margin-top:10px;'>อาการที่พบ</p>", unsafe_allow_html=True)
-            user_input = st.text_input("อาการที่พบ", placeholder="เช่น ซึม อาเจียน หรือ ไม่กินอาหาร", label_visibility="collapsed")
+            q3, q4 = st.columns(2)
+            if q3.button("🩸 เลือดออก / มีแผล", use_container_width=True):
+                navigate('result')
+                st.rerun()
+            if q4.button("🦵 เดินขากะเผลก", use_container_width=True):
+                navigate('result')
+                st.rerun()
+
+            st.markdown("<hr style='margin: 15px 0px; border-color: #E8E8ED;'>", unsafe_allow_html=True)
+            
+            # --- ส่วนสำหรับอาการอื่นๆ ที่ต้องพิมพ์ ---
+            st.markdown("<p style='font-size:14px; font-weight:600; margin-bottom:4px;'>ระบุอาการด้วยตนเอง</p>", unsafe_allow_html=True)
+            species = st.selectbox("ชนิดสัตว์เลี้ยง", ["สุนัข", "แมว", "สัตว์แปลก (Exotic)"], label_visibility="collapsed")
+            user_input = st.text_input("อาการที่พบ", placeholder="เช่น ผื่นแดงตามหน้าท้อง...", label_visibility="collapsed")
             
             st.markdown("<p style='font-size:14px; font-weight:600; margin-bottom:4px; margin-top:10px;'>แนบรูปภาพ/วิดีโอ (ถ้ามี)</p>", unsafe_allow_html=True)
             st.file_uploader("แนบไฟล์", type=['png','jpg','mp4'], label_visibility="collapsed")
@@ -202,7 +220,7 @@ if selected_workspace == '📱 B2C (ผู้ใช้)':
                 navigate('result')
                 st.rerun()
 
-        # Feature: AI Behavioral Insights Dashboard (B2C)
+        # --- Feature: AI Behavioral Insights Dashboard (B2C) ---
         with st.container(border=True):
             st.markdown("<h3 style='margin-bottom:0px; font-size:20px; font-weight:700;'>📊 สถิติพฤติกรรมเชิงลึก</h3>", unsafe_allow_html=True)
             st.markdown("<p style='color:#86868B; font-size:14px; margin-bottom:15px; font-weight:500;'>เครื่องมือแปลภาษาพฤติกรรมสัตว์</p>", unsafe_allow_html=True)
