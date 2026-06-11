@@ -62,25 +62,18 @@ st.markdown("""
             background-color: #F5F5F7 !important;
         }
         
-        /* --- 🩹 CRITICAL BUG FIX: File Uploader --- */
+        /* --- 🩹 SURGICAL FIX: File Uploader --- */
+        /* เราจะปรับแค่กรอบด้านนอก และปล่อยให้ปุ่มด้านในทำงานตาม Native ของ Streamlit เพื่อกันบั๊กซ้อนทับ */
         div[data-testid="stFileUploader"] section {
             border: 1px dashed #D2D2D7 !important;
             background-color: #FAFAFA !important;
             border-radius: 14px !important;
-            padding: 20px !important;
+            padding: 15px !important;
         }
-        /* Lock the inner upload button so it doesn't stretch and overlap */
-        div[data-testid="stFileUploader"] button {
-            width: auto !important; 
-            border-radius: 8px !important;
-            border: 1px solid #D2D2D7 !important;
-            background-color: #FFFFFF !important;
-            color: #007AFF !important;
-            padding: 4px 14px !important;
-        }
+        /* ลบคำสั่งที่ไปบังคับปุ่มด้านในของ File Uploader ทิ้งทั้งหมด */
 
         /* --- Global Button Styling --- */
-        /* Target only standard stButtons, avoid breaking inner components */
+        /* เจาะจงเฉพาะปุ่มมาตรฐาน (stButton) เพื่อไม่ให้กระทบปุ่มอัปโหลดไฟล์ */
         div[data-testid="stButton"] > button {
             border-radius: 14px !important;
             font-weight: 500 !important;
@@ -212,7 +205,6 @@ if selected_workspace == '📱 ฝั่งผู้ใช้ (B2C)':
         if st.button("⬅️ กลับหน้าหลัก"):
             navigate('home')
             st.rerun()
-
 
 # ==========================================
 # WORKSPACE 2: B2B Portal (Veterinary)
